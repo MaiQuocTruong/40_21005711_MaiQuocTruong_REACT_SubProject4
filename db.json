@@ -1,0 +1,446 @@
+{
+    "categoriesOfHome": [
+      { "id": "1", "name": "Electronics", "icon": "https://i.imgur.com/7P7Eftu.png" },
+      { "id": "2", "name": "Fashion", "icon": "https://i.imgur.com/CgnlOG2.png" },
+      { "id": "3", "name": "Beauty", "icon": "https://i.imgur.com/99odWDF.png" },
+      { "id": "4", "name": "Fresh Fruits", "icon": "https://i.imgur.com/YVOn8qL.png" }
+    ],
+    "deals": [
+      { "id": "1", "name": "Shoes", "discount": "50%", "image": "./assets/img/jordan.png" }
+    ],
+    "recommendations": [
+      { "id": "1", "name": "Shoes", "price": "$299", "rating": 4.5, "image": "./assets/img/shoes1.png" },
+      { "id": "2", "name": "Tablet", "price": "$499", "rating": 4.5, "image": "./assets/img/ipad.png" },
+      { "id": "3", "name": "Pear", "price": "$299", "rating": 4.5, "image": "./assets/img/traibo1.png" }
+    ],
+    "categoriesOfElectronic" : [
+      { "icon": "https://i.imgur.com/jfNwyDe.png", "name": "Smartphone", "id": "1" },
+      { "icon": "https://i.imgur.com/BGLmvO0.png", "name": "Ipad", "id": "2" },
+      { "icon": "https://i.imgur.com/WJRePm8.png", "name": "MacBook", "id": "3" }
+    ],
+    "reviews": [
+      {
+        "id": "1",
+        "name": "Jevon Raynor",
+        "avatar": "./assets/img/ava3.png",
+        "comment": "Deserunt minim incididunt cillum",
+        "daysAgo": "A day ago"
+      },
+      {
+        "id": "2",
+        "name": "Jason D.",
+        "avatar": "./assets/img/ava4.png",
+        "comment": "Magna pariatur sit et ullamco paria",
+        "daysAgo": "3 days ago"
+      }
+    ],
+    "paymentMethods" : [
+      {"type": "Visa","number": "2334","brand": "visa","id": "1"},
+      {"type": "MasterCard","number": "3774","brand": "mastercard","id": "2"},
+      {"type": "PayPal","email": "maiqtruong2403@gmail.com","brand": "paypal","id": "3"},
+      {"type": "MoMo","number": "1257","brand": "momo","id": "4"}
+    ],
+    "productsOfElectronics" : [
+      {
+          "name": "Smartphone",
+          "price": "$899",
+          "rating": 4,
+          "image": "https://i.imgur.com/dSs05cL.png",
+          "description": "Consequat ex eu",
+          "status": "Best Sales",
+          "id": "1"
+      },
+      {
+          "name": "Smartphone",
+          "price": "$899",
+          "rating": 4,
+          "image": "https://i.imgur.com/jX3QmQD.png",
+          "description": "Consequat ex eu",
+          "status": "Best Sales",
+          "id": "2"
+      },
+      {
+          "name": "Smartphone",
+          "price": "$789",
+          "rating": 4,
+          "image": "https://i.imgur.com/pxUTAlZ.png",
+          "description": "Consequat ex eu",
+          "status": "Best Sales",
+          "id": "3"
+      },
+      {
+          "name": "Smartphone",
+          "price": "$999",
+          "rating": 4,
+          "image": "https://i.imgur.com/yujpIYv.png",
+          "description": "Consequat ex eu",
+          "status": "Best Sales",
+          "id": "4"
+      },
+      {
+          "name": "Smartphone",
+          "price": "$999",
+          "rating": 4,
+          "image": "https://i.imgur.com/jX3QmQD.png",
+          "description": "Consequat ex eu",
+          "status": "Best Sales",
+          "id": "5"
+      },
+      {
+          "name": "Smartphone",
+          "price": "$678",
+          "rating": 4,
+          "image": "https://i.imgur.com/pxUTAlZ.png",
+          "description": "Consequat ex eu",
+          "status": "Best Matched",
+          "id": "6"
+      },
+      {
+          "name": "Smartphone",
+          "price": "$678",
+          "rating": 4,
+          "image": "https://i.imgur.com/jX3QmQD.png",
+          "description": "Consequat ex eu",
+          "status": "Best Matched",
+          "id": "7"
+      },
+      {
+          "name": "Smartphone",
+          "price": "$500",
+          "rating": 4,
+          "image": "https://i.imgur.com/yujpIYv.png",
+          "description": "Consequat ex eu",
+          "status": "Popular",
+          "id": "8"
+      },
+      {
+          "name": "Smartphone",
+          "price": "$500",
+          "rating": 4,
+          "image": "https://i.imgur.com/yujpIYv.png",
+          "description": "Consequat ex eu",
+          "status": "Popular",
+          "id": "9"
+      },
+      {
+          "name": "Smartphone",
+          "price": "$500",
+          "rating": 4,
+          "image": "https://i.imgur.com/yujpIYv.png",
+          "description": "Consequat ex eu",
+          "status": "Popular",
+          "id": "10"
+      },
+      {
+          "name": "Ipad",
+          "price": "$899",
+          "rating": 4,
+          "image": "https://i.imgur.com/BGLmvO0.png",
+          "description": "Consequat ex eu",
+          "status": "Best Sales",
+          "id": "11"
+      },
+      {
+          "name": "Ipad",
+          "price": "$899",
+          "rating": 4,
+          "image": "https://i.imgur.com/BGLmvO0.png",
+          "description": "Consequat ex eu",
+          "status": "Best Sales",
+          "id": "12"
+      },
+      {
+          "name": "Ipad",
+          "price": "$879",
+          "rating": 4,
+          "image": "https://i.imgur.com/BGLmvO0.png",
+          "description": "Consequat ex eu",
+          "status": "Best Sales",
+          "id": "13"
+      },
+      {
+          "name": "Ipad",
+          "price": "$999",
+          "rating": 4,
+          "image": "https://i.imgur.com/BGLmvO0.png",
+          "description": "Consequat ex eu",
+          "status": "Best Sales",
+          "id": "14"
+      },
+      {
+          "name": "Ipad",
+          "price": "$909",
+          "rating": 4,
+          "image": "https://i.imgur.com/BGLmvO0.png",
+          "description": "Consequat ex eu",
+          "status": "Best Sales",
+          "id": "15"
+      },
+      {
+          "name": "Ipad",
+          "price": "$789",
+          "rating": 4,
+          "image": "https://i.imgur.com/BGLmvO0.png",
+          "description": "Consequat ex eu",
+          "status": "Best Sales",
+          "id": "16"
+      },
+      {
+          "name": "Ipad",
+          "price": "$799",
+          "rating": 4,
+          "image": "https://i.imgur.com/BGLmvO0.png",
+          "description": "Consequat ex eu",
+          "status": "Best Matched",
+          "id": "17"
+      },
+      {
+          "name": "Ipad",
+          "price": "$899",
+          "rating": 4,
+          "image": "https://i.imgur.com/BGLmvO0.png",
+          "description": "Consequat ex eu",
+          "status": "Best Matched",
+          "id": "18"
+      },
+      {
+          "name": "Ipad",
+          "price": "$500",
+          "rating": 4,
+          "image": "https://i.imgur.com/BGLmvO0.png",
+          "description": "Consequat ex eu",
+          "status": "Popular",
+          "id": "19"
+      },
+      {
+          "name": "Ipad",
+          "price": "$500",
+          "rating": 4,
+          "image": "https://i.imgur.com/BGLmvO0.png",
+          "description": "Consequat ex eu",
+          "status": "Popular",
+          "id": "20"
+      },
+      {
+          "name": "MacBook",
+          "price": "$678",
+          "rating": 4,
+          "image": "https://i.imgur.com/WJRePm8.png",
+          "description": "Consequat ex eu",
+          "status": "Best Sales",
+          "id": "21"
+      },
+      {
+          "name": "MacBook",
+          "price": "$678",
+          "rating": 4,
+          "image": "https://i.imgur.com/WJRePm8.png",
+          "description": "Consequat ex eu",
+          "status": "Best Sales",
+          "id": "22"
+      },
+      {
+          "name": "MacBook",
+          "price": "$678",
+          "rating": 4,
+          "image": "https://i.imgur.com/WJRePm8.png",
+          "description": "Consequat ex eu",
+          "status": "Best Sales",
+          "id": "23"
+      },
+      {
+          "name": "MacBook",
+          "price": "$678",
+          "rating": 4,
+          "image": "https://i.imgur.com/WJRePm8.png",
+          "description": "Consequat ex eu",
+          "status": "Best Sales",
+          "id": "24"
+      },
+      {
+          "name": "MacBook",
+          "price": "$678",
+          "rating": 4,
+          "image": "https://i.imgur.com/WJRePm8.png",
+          "description": "Consequat ex eu",
+          "status": "Best Matched",
+          "id": "25"
+      },
+      {
+          "name": "MacBook",
+          "price": "$555",
+          "rating": 4,
+          "image": "https://i.imgur.com/WJRePm8.png",
+          "description": "Consequat ex eu",
+          "status": "Best Matched",
+          "id": "26"
+      },
+      {
+          "name": "MacBook",
+          "price": "$603",
+          "rating": 4,
+          "image": "https://i.imgur.com/WJRePm8.png",
+          "description": "Consequat ex eu",
+          "status": "Popular",
+          "id": "27"
+      },
+      {
+          "name": "MacBook",
+          "price": "$602",
+          "rating": 4,
+          "image": "https://i.imgur.com/WJRePm8.png",
+          "description": "Consequat ex eu",
+          "status": "Popular",
+          "id": "28"
+      },
+      {
+          "name": "MacBook",
+          "price": "$601",
+          "rating": 4,
+          "image": "https://i.imgur.com/WJRePm8.png",
+          "description": "Consequat ex eu",
+          "status": "Popular",
+          "id": "29"
+      },
+      {
+          "name": "MacBook",
+          "price": "$600",
+          "rating": 4,
+          "image": "https://i.imgur.com/WJRePm8.png",
+          "description": "Consequat ex eu",
+          "status": "Popular",
+          "id": "30"
+      }
+    ],
+    "productsOfFresh" : [
+      {
+        "name": "Pear",
+        "price": "$12",
+        "rating": 4,
+        "image": "./assets/img/pear.png",
+        "description": "Consequat ex eu",
+        "id": "1"
+      },
+      {
+        "name": "Avocado",
+        "price": "$11",
+        "rating": 4,
+        "image": "./assets/img/traibo1.png",
+        "description": "Consequat ex eu",
+        "id": "2"
+      },
+      {
+        "name": "Cherry",
+        "price": "$5",
+        "rating": 4,
+        "image": "./assets/img/cherry.png",
+        "description": "Consequat ex eu",
+        "id": "3"
+      },
+      {
+        "name": "Orange",
+        "price": "$7",
+        "rating": 4,
+        "image": "./assets/img/orange.png",
+        "description": "Consequat ex eu",
+        "id": "4"
+      },
+      {
+        "name": "Apple",
+        "price": "$8",
+        "rating": 4,
+        "image": "./assets/img/apple.png",
+        "description": "Consequat ex eu",
+        "id": "5"
+      },
+      {
+        "name": "Peach",
+        "price": "$4",
+        "rating": 4,
+        "image": "./assets/img/peach.png",
+        "description": "Consequat ex eu",
+        "id": "6"
+      },
+      {
+        "name": "Watermelon",
+        "price": "$3",
+        "rating": 4,
+        "image": "./assets/img/watermelon.png",
+        "description": "Consequat ex eu",
+        "id": "7"
+      },
+      {
+        "name": "Banana",
+        "price": "$5",
+        "rating": 4,
+        "image": "./assets/img/banana.png",
+        "description": "Consequat ex eu",
+        "id": "8"
+      },
+      {
+        "name": "Grape",
+        "price": "$10",
+        "rating": 4,
+        "image": "./assets/img/grape.png",
+        "description": "Consequat ex eu",
+        "id": "9"
+      },
+      {
+        "name": "Lemon",
+        "price": "$11",
+        "rating": 4,
+        "image": "./assets/img/lemon.png",
+        "description": "Consequat ex eu",
+        "id": "10"
+      },
+      {
+        "name": "Mango",
+        "price": "$12",
+        "rating": 4,
+        "image": "./assets/img/mango.png",
+        "description": "Consequat ex eu",
+        "id": "11"
+      },
+      {
+        "name": "Kiwi",
+        "price": "$9",
+        "rating": 4,
+        "image": "./assets/img/kiwi.png",
+        "description": "Consequat ex eu",
+        "id": "12"
+      },
+      {
+        "name": "Strawberry",
+        "price": "$6",
+        "rating": 4,
+        "image": "./assets/img/strawberry.png",
+        "description": "Consequat ex eu",
+        "id": "13"
+      },
+      {
+        "name": "Pineapple",
+        "price": "$4",
+        "rating": 4,
+        "image": "./assets/img/Pineapple.png",
+        "description": "Consequat ex eu",
+        "id": "14"
+      },
+      {
+        "name": "Pomegranate",
+        "price": "$6",
+        "rating": 4,
+        "image": "./assets/img/pomegranate.png",
+        "description": "Consequat ex eu",
+        "id": "15"
+      },
+      {
+        "name": "Coconut",
+        "price": "$11",
+        "rating": 4,
+        "image": "./assets/img/coconut.png",
+        "description": "Consequat ex eu",
+        "id": "16"
+      }
+    ]
+  }
+  
