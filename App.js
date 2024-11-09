@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from './screens/LoginScreen';
 import HomeScreen from './screens/HomeScreen';
 import ElectronicsScreen from './screens/ElectronicsScreen';
+import FreshScreen from './screens/FreshScreen';
 import ProductDetailScreen from './screens/ProductDetailScreen';
 import PaymentScreen from './screens/PaymentScreen';
 import PaymentSuccess from './screens/PaymentSuccess';
@@ -39,6 +40,20 @@ export default function App() {
         <Stack.Screen 
           name="Electronics" 
           component={ElectronicsScreen} 
+          options={{ 
+            headerTitle: '',
+            headerBackTitleVisible: false, 
+            headerStyle: {
+              elevation: 0, 
+              shadowOpacity: 0, 
+              borderBottomWidth: 0, 
+            },
+            header: () => null,
+          }}
+        />
+        <Stack.Screen 
+          name="Fresh" 
+          component={FreshScreen} 
           options={{ 
             headerTitle: '',
             headerBackTitleVisible: false, 
