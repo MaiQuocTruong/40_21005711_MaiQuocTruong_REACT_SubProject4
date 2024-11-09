@@ -33,7 +33,7 @@ export default function LoginScreen() {
     const user = users.find(user => user.email === email && user.password === password);
     if (user) {
       // Đăng nhập thành công
-      navigation.navigate('Electronics');
+      navigation.navigate('HomeScreen');
     } else {
       setLoginError('Email hoặc mật khẩu không đúng!'); // Thiết lập thông báo lỗi
       setModalVisible(true); // Hiển thị modal thông báo lỗi

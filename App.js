@@ -16,6 +16,20 @@ export default function App() {
           component={LoginScreen} 
           options={{ headerShown: false }} // Ẩn header cho màn hình đăng nhập
         />
+        <Stack.Screen 
+          name="HomeScreen" 
+          component={HomeScreen} 
+          options={{ 
+            headerTitle: '',
+            headerBackTitleVisible: false, 
+            headerStyle: {
+              elevation: 0, 
+              shadowOpacity: 0, 
+              borderBottomWidth: 0, 
+            },
+            header: () => null,
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
     </CartProvider>
