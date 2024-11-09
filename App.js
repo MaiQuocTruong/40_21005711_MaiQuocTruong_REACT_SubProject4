@@ -5,6 +5,7 @@ import LoginScreen from './screens/LoginScreen';
 import HomeScreen from './screens/HomeScreen';
 import ElectronicsScreen from './screens/ElectronicsScreen';
 import ProductDetailScreen from './screens/ProductDetailScreen';
+import CartScreen from './screens/CartScreen';
 import { CartProvider } from './contexts/CartContext';
 
 const Stack = createStackNavigator();
@@ -50,6 +51,20 @@ export default function App() {
         <Stack.Screen 
           name="ProductDetailScreen" 
           component={ProductDetailScreen} 
+          options={{ 
+            headerTitle: '',
+            headerBackTitleVisible: false, 
+            headerStyle: {
+              elevation: 0, 
+              shadowOpacity: 0, 
+              borderBottomWidth: 0, 
+            },
+            header: () => null,
+          }}
+        />
+        <Stack.Screen 
+          name="Cart" 
+          component={CartScreen} 
           options={{ 
             headerTitle: '',
             headerBackTitleVisible: false, 
