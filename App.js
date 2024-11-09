@@ -6,6 +6,7 @@ import HomeScreen from './screens/HomeScreen';
 import ElectronicsScreen from './screens/ElectronicsScreen';
 import FreshScreen from './screens/FreshScreen';
 import ProductDetailScreen from './screens/ProductDetailScreen';
+import ProductDetail from './screens/ProductDetail';
 import PaymentScreen from './screens/PaymentScreen';
 import PaymentSuccess from './screens/PaymentSuccess';
 import CartScreen from './screens/CartScreen';
@@ -68,6 +69,20 @@ export default function App() {
         <Stack.Screen 
           name="ProductDetailScreen" 
           component={ProductDetailScreen} 
+          options={{ 
+            headerTitle: '',
+            headerBackTitleVisible: false, 
+            headerStyle: {
+              elevation: 0, 
+              shadowOpacity: 0, 
+              borderBottomWidth: 0, 
+            },
+            header: () => null,
+          }}
+        />
+        <Stack.Screen 
+          name="ProductDetail" 
+          component={ProductDetail} 
           options={{ 
             headerTitle: '',
             headerBackTitleVisible: false, 
