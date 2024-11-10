@@ -6,7 +6,7 @@ import Collapsible from 'react-native-collapsible';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 
-const ModalFilter = ({ visible, onClose }) => {
+const ModalFilter = ({ visible, onClose, onFilterChange }) => {
   const [priceRange, setPriceRange] = useState([10, 1000]);
   const [averageReview, setAverageReview] = useState(4);
   const [showShippingOptions, setShowShippingOptions] = useState(false);
@@ -22,12 +22,13 @@ const ModalFilter = ({ visible, onClose }) => {
 
   const handlePriceRangeChange = (values) => {
     setPriceRange(values);
+    onFilterChange(values);
   };
 
   const handleShippingOptionSelect = (option) => {
     setSelectedShippingOption(selectedShippingOption === option ? null : option);
   };
-
+  
   return (
     <Modal visible={visible} animationType="slide" transparent={true}>
       <View style={styles.modalOverlay}>

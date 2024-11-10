@@ -6,6 +6,7 @@ import { MaterialIcons, Ionicons } from '@expo/vector-icons';
 import Dots from 'react-native-dots-pagination'; 
 import { useNavigation } from '@react-navigation/native';
 import { CartContext } from '../contexts/CartContext';
+import ModalFilter from '../components/ModalFilter';
 
 export default function FreshScreen() {
   const [products, setProducts] = useState([]);
@@ -15,17 +16,14 @@ export default function FreshScreen() {
   const navigation = useNavigation();
   const [searchFocused, setSearchFocused] = useState(false);
   const [searchText, setSearchText] = useState('');
-
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [priceRange, setPriceRange] = useState([10, 1000]);
   const { addToCart } = useContext(CartContext);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const productsResponse = await axios.get('http://localhost:3000/productsOfFresh');
-        const productsWithCategory = productsResponse.data.map(product => ({
-          ...product,
-          category: 'Fresh'
-        }));
         setProducts(productsResponse.data);
         setFilteredProducts(productsResponse.data);
       } catch (error) {
@@ -43,17 +41,32 @@ export default function FreshScreen() {
     setFilteredProducts(filtered);
   };
 
+  const filterByPriceRange = (range) => {
+    const filtered = products.filter(product => {
+      const price = parseFloat(product.price.replace('$', ''));
+      return price >= range[0] && price <= range[1];
+    });
+    setFilteredProducts(filtered);
+  };
+
+  const handleFilterChange = (newPriceRange) => {
+    setPriceRange(newPriceRange);
+    filterByPriceRange(newPriceRange);
+  };
+
   const toggleShowAllProducts = () => {
     setShowAllProducts(!showAllProducts);
   };
 
+  const toggleModal = () => {
+    setIsModalVisible(!isModalVisible);
+  };
 
   const handleProductPressDetail = (item) => {
     navigation.navigate('ProductDetail', {
-      product: item, // Chỉ truyền sản phẩm đã chọn
+      product: item,
     });
   };
-  
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -91,10 +104,13 @@ export default function FreshScreen() {
                 onChangeText={filterProductsByName}
               />
             </View>
-            <TouchableOpacity style={styles.sortButton}>
+            <TouchableOpacity style={styles.sortButton} onPress={toggleModal}>
               <MaterialIcons name="sort" size={20} color="#000"/>
             </TouchableOpacity>
           </View>
+
+          {/* Filter Modal for price range */}
+          <ModalFilter visible={isModalVisible} onClose={toggleModal} onFilterChange={handleFilterChange}/>
 
           <View style={styles.staticImageContainer}>
             <Image source={require('../assets/img/banner1.jpg')} style={styles.staticImage} />
@@ -139,6 +155,7 @@ export default function FreshScreen() {
               contentContainerStyle={styles.productList}
             />
           )}
+
           <TouchableOpacity style={styles.seeAllButton} onPress={toggleShowAllProducts}>
             <Text style={styles.seeAllButtonText}>{showAllProducts ? 'See less' : 'See all'}</Text>
           </TouchableOpacity>
@@ -150,6 +167,7 @@ export default function FreshScreen() {
               <Text style={styles.seeAllText}>See all</Text>
             </TouchableOpacity>
           </View>
+
           {/* list of Relevant products */}
           {filteredProducts.length === 0 ? (
             <Text style={styles.noProductsText}>No products found</Text>
@@ -177,7 +195,6 @@ export default function FreshScreen() {
           )}
 
         </ScrollView>
-
         <Footer navigation={navigation} />
       </View>
     </SafeAreaView>

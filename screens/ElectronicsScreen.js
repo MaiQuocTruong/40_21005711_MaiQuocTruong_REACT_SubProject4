@@ -19,6 +19,20 @@ export default function ElectronicsScreen() {
   const [searchFocused, setSearchFocused] = useState(false);
   const [searchText, setSearchText] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [priceRange, setPriceRange] = useState([10, 1000]);
+
+  const filterByPriceRange = (products, range, status) => {
+    return products.filter(product => {
+      const price = parseFloat(product.price.replace('$', '')); // Remove the '$' symbol and convert to number
+      return price >= range[0] && price <= range[1] && product.status === status;
+    });
+  };  
+  
+  const handleFilterChange = (newPriceRange) => {
+    setPriceRange(newPriceRange);
+    const filtered = filterByPriceRange(products, newPriceRange, selectedTab);
+    setFilteredProducts(filtered);
+  };
 
   const { addToCart } = useContext(CartContext);
 
@@ -43,21 +57,26 @@ export default function ElectronicsScreen() {
 
   const filterProducts = (categoryId, categoryName) => {
     setSelectedCategoryId(categoryId);
-    const filtered = products.filter(product =>
-      product.name === categoryName && product.status === selectedTab
+    const filtered = products.filter(product => 
+      product.name === categoryName && 
+      product.status === selectedTab &&
+      product.category === "Electronics"
     );
     setFilteredProducts(filtered);
-  };
+  };  
 
   useEffect(() => {
     if (selectedCategoryId) {
       const category = categories.find(cat => cat.id === selectedCategoryId);
       const filtered = products.filter(product => 
-        product.name === category.name && product.status === selectedTab
+        product.name === category.name && 
+        product.status === selectedTab &&
+        product.category === "Electronics"
       );
-      setFilteredProducts(filtered);
+      const priceFiltered = filterByPriceRange(filtered, priceRange, selectedTab);
+      setFilteredProducts(priceFiltered);
     }
-  }, [selectedTab, selectedCategoryId, products]);
+  }, [selectedTab, selectedCategoryId, products, priceRange]);  
 
   const filterProductsByName = (text) => {
     setSearchText(text);
@@ -128,7 +147,7 @@ export default function ElectronicsScreen() {
             </TouchableOpacity>
           </View>
 
-          <ModalFilter visible={isModalVisible} onClose={toggleModal} />
+          <ModalFilter visible={isModalVisible} onClose={toggleModal} onFilterChange={handleFilterChange}/>
 
           <View style={styles.categoriesHeader}>
             <Text style={styles.categoriesTitle}>Categories</Text>

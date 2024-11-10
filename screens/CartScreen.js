@@ -34,12 +34,13 @@ const CartScreen = () => {
       setItemToRemove(item);
       setModalVisible(true);
     } else {
-      removeFromCart(item.id);
+      // Pass both id and category to remove from cart
+      removeFromCart(item.id, item.category);
     }
-  };
+  };  
 
   const confirmRemove = () => {
-    removeFromCart(itemToRemove.id);
+    removeFromCart(itemToRemove.id, itemToRemove.category);
     setModalVisible(false);
     setItemToRemove(null);
   };

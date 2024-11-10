@@ -53,7 +53,7 @@
       },
       {
           "name": "Smartphone",
-          "price": "$899",
+          "price": "$500",
           "rating": 4,
           "image": "https://i.imgur.com/jX3QmQD.png",
           "description": "Consequat ex eu",
@@ -63,7 +63,7 @@
       },
       {
           "name": "Smartphone",
-          "price": "$789",
+          "price": "$500",
           "rating": 4,
           "image": "https://i.imgur.com/pxUTAlZ.png",
           "description": "Consequat ex eu",
@@ -73,7 +73,7 @@
       },
       {
           "name": "Smartphone",
-          "price": "$999",
+          "price": "$900",
           "rating": 4,
           "image": "https://i.imgur.com/yujpIYv.png",
           "description": "Consequat ex eu",
@@ -83,7 +83,7 @@
       },
       {
           "name": "Smartphone",
-          "price": "$999",
+          "price": "$600",
           "rating": 4,
           "image": "https://i.imgur.com/jX3QmQD.png",
           "description": "Consequat ex eu",
@@ -103,7 +103,7 @@
       },
       {
           "name": "Smartphone",
-          "price": "$678",
+          "price": "$780",
           "rating": 4,
           "image": "https://i.imgur.com/jX3QmQD.png",
           "description": "Consequat ex eu",
@@ -113,7 +113,7 @@
       },
       {
           "name": "Smartphone",
-          "price": "$500",
+          "price": "$600",
           "rating": 4,
           "image": "https://i.imgur.com/yujpIYv.png",
           "description": "Consequat ex eu",
@@ -133,7 +133,7 @@
       },
       {
           "name": "Smartphone",
-          "price": "$500",
+          "price": "$788",
           "rating": 4,
           "image": "https://i.imgur.com/yujpIYv.png",
           "description": "Consequat ex eu",
@@ -173,7 +173,7 @@
       },
       {
           "name": "Ipad",
-          "price": "$999",
+          "price": "$900",
           "rating": 4,
           "image": "https://i.imgur.com/BGLmvO0.png",
           "description": "Consequat ex eu",
@@ -213,7 +213,7 @@
       },
       {
           "name": "Ipad",
-          "price": "$899",
+          "price": "$786",
           "rating": 4,
           "image": "https://i.imgur.com/BGLmvO0.png",
           "description": "Consequat ex eu",
