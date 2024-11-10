@@ -22,6 +22,10 @@ export default function FreshScreen() {
     const fetchData = async () => {
       try {
         const productsResponse = await axios.get('http://localhost:3000/productsOfFresh');
+        const productsWithCategory = productsResponse.data.map(product => ({
+          ...product,
+          category: 'Fresh'
+        }));
         setProducts(productsResponse.data);
         setFilteredProducts(productsResponse.data);
       } catch (error) {
@@ -43,14 +47,6 @@ export default function FreshScreen() {
     setShowAllProducts(!showAllProducts);
   };
 
-  const handleProductPress = (item) => {
-    // Lấy 4 sản phẩm đầu tiên cùng loại
-    const relatedProducts = filteredProducts.filter(product => product.name === item.name).slice(0, 4);
-    navigation.navigate('ProductDetailScreen', {
-      product: item,
-      relatedProducts: relatedProducts,
-    });
-  };
 
   const handleProductPressDetail = (item) => {
     navigation.navigate('ProductDetail', {
@@ -159,7 +155,7 @@ export default function FreshScreen() {
             <Text style={styles.noProductsText}>No products found</Text>
           ) : (
             <FlatList
-            data={filteredProducts.slice(3, 7)}
+            data={filteredProducts}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
             <TouchableOpacity style={styles.productItem} onPress={() => handleProductPressDetail(item)}>

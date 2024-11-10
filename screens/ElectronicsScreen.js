@@ -28,6 +28,10 @@ export default function ElectronicsScreen() {
         const categoriesResponse = await axios.get('http://localhost:3000/categoriesOfElectronic');
         const productsResponse = await axios.get('http://localhost:3000/productsOfElectronics');
         setCategories(categoriesResponse.data);
+        const productsWithCategory = productsResponse.data.map(product => ({
+          ...product,
+          category: 'Electronics'
+        }));
         setProducts(productsResponse.data);
         setFilteredProducts(productsResponse.data);
       } catch (error) {

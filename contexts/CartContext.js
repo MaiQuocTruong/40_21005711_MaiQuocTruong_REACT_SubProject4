@@ -9,12 +9,12 @@ export const CartProvider = ({ children }) => {
   // Thêm sản phẩm vào giỏ hàng
   const addToCart = (newProduct, quantity = 1) => {
     setCartItems((prevItems) => {
-      const existingItem = prevItems.find(item => item.id === newProduct.id);
+      const existingItem = prevItems.find(item => item.id === newProduct.id && item.category === newProduct.category);
 
       if (existingItem) {
         // Nếu sản phẩm đã có trong giỏ hàng, tăng số lượng
         return prevItems.map(item =>
-          item.id === newProduct.id
+          item.id === newProduct.id && item.category === newProduct.category
             ? { ...item, quantity: item.quantity + quantity }
             : item
         );

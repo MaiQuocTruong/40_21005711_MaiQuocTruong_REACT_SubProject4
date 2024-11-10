@@ -74,6 +74,7 @@ const CartScreen = () => {
           <Text style={styles.name}>{item.name}</Text>
           <Text style={styles.description}>{item.description}</Text>
           <Text style={styles.price}>{item.price}</Text>
+          <Text style={styles.category}>{item.category}</Text>
         </View>
         <Text style={styles.quantity}>x{item.quantity}</Text>
         <TouchableOpacity onPress={() => handleRemoveFromCart(item)}>

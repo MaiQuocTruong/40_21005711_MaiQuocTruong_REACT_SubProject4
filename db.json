@@ -48,7 +48,8 @@
           "image": "https://i.imgur.com/dSs05cL.png",
           "description": "Consequat ex eu",
           "status": "Best Sales",
-          "id": "1"
+          "id": "1",
+          "category": "Electronics"
       },
       {
           "name": "Smartphone",
@@ -57,7 +58,8 @@
           "image": "https://i.imgur.com/jX3QmQD.png",
           "description": "Consequat ex eu",
           "status": "Best Sales",
-          "id": "2"
+          "id": "2",
+          "category": "Electronics"
       },
       {
           "name": "Smartphone",
@@ -66,7 +68,8 @@
           "image": "https://i.imgur.com/pxUTAlZ.png",
           "description": "Consequat ex eu",
           "status": "Best Sales",
-          "id": "3"
+          "id": "3",
+          "category": "Electronics"
       },
       {
           "name": "Smartphone",
@@ -75,7 +78,8 @@
           "image": "https://i.imgur.com/yujpIYv.png",
           "description": "Consequat ex eu",
           "status": "Best Sales",
-          "id": "4"
+          "id": "4",
+          "category": "Electronics"
       },
       {
           "name": "Smartphone",
@@ -84,7 +88,8 @@
           "image": "https://i.imgur.com/jX3QmQD.png",
           "description": "Consequat ex eu",
           "status": "Best Sales",
-          "id": "5"
+          "id": "5",
+          "category": "Electronics"
       },
       {
           "name": "Smartphone",
@@ -93,7 +98,8 @@
           "image": "https://i.imgur.com/pxUTAlZ.png",
           "description": "Consequat ex eu",
           "status": "Best Matched",
-          "id": "6"
+          "id": "6",
+          "category": "Electronics"
       },
       {
           "name": "Smartphone",
@@ -102,7 +108,8 @@
           "image": "https://i.imgur.com/jX3QmQD.png",
           "description": "Consequat ex eu",
           "status": "Best Matched",
-          "id": "7"
+          "id": "7",
+          "category": "Electronics"
       },
       {
           "name": "Smartphone",
@@ -111,7 +118,8 @@
           "image": "https://i.imgur.com/yujpIYv.png",
           "description": "Consequat ex eu",
           "status": "Popular",
-          "id": "8"
+          "id": "8",
+          "category": "Electronics"
       },
       {
           "name": "Smartphone",
@@ -120,7 +128,8 @@
           "image": "https://i.imgur.com/yujpIYv.png",
           "description": "Consequat ex eu",
           "status": "Popular",
-          "id": "9"
+          "id": "9",
+          "category": "Electronics"
       },
       {
           "name": "Smartphone",
@@ -129,7 +138,8 @@
           "image": "https://i.imgur.com/yujpIYv.png",
           "description": "Consequat ex eu",
           "status": "Popular",
-          "id": "10"
+          "id": "10",
+          "category": "Electronics"
       },
       {
           "name": "Ipad",
@@ -138,7 +148,8 @@
           "image": "https://i.imgur.com/BGLmvO0.png",
           "description": "Consequat ex eu",
           "status": "Best Sales",
-          "id": "11"
+          "id": "11",
+          "category": "Electronics"
       },
       {
           "name": "Ipad",
@@ -147,7 +158,8 @@
           "image": "https://i.imgur.com/BGLmvO0.png",
           "description": "Consequat ex eu",
           "status": "Best Sales",
-          "id": "12"
+          "id": "12",
+          "category": "Electronics"
       },
       {
           "name": "Ipad",
@@ -156,7 +168,8 @@
           "image": "https://i.imgur.com/BGLmvO0.png",
           "description": "Consequat ex eu",
           "status": "Best Sales",
-          "id": "13"
+          "id": "13",
+          "category": "Electronics"
       },
       {
           "name": "Ipad",
@@ -165,7 +178,8 @@
           "image": "https://i.imgur.com/BGLmvO0.png",
           "description": "Consequat ex eu",
           "status": "Best Sales",
-          "id": "14"
+          "id": "14",
+          "category": "Electronics"
       },
       {
           "name": "Ipad",
@@ -174,7 +188,8 @@
           "image": "https://i.imgur.com/BGLmvO0.png",
           "description": "Consequat ex eu",
           "status": "Best Sales",
-          "id": "15"
+          "id": "15",
+          "category": "Electronics"
       },
       {
           "name": "Ipad",
@@ -183,7 +198,8 @@
           "image": "https://i.imgur.com/BGLmvO0.png",
           "description": "Consequat ex eu",
           "status": "Best Sales",
-          "id": "16"
+          "id": "16",
+          "category": "Electronics"
       },
       {
           "name": "Ipad",
@@ -192,7 +208,8 @@
           "image": "https://i.imgur.com/BGLmvO0.png",
           "description": "Consequat ex eu",
           "status": "Best Matched",
-          "id": "17"
+          "id": "17",
+          "category": "Electronics"
       },
       {
           "name": "Ipad",
@@ -201,7 +218,8 @@
           "image": "https://i.imgur.com/BGLmvO0.png",
           "description": "Consequat ex eu",
           "status": "Best Matched",
-          "id": "18"
+          "id": "18",
+          "category": "Electronics"
       },
       {
           "name": "Ipad",
@@ -210,7 +228,8 @@
           "image": "https://i.imgur.com/BGLmvO0.png",
           "description": "Consequat ex eu",
           "status": "Popular",
-          "id": "19"
+          "id": "19",
+          "category": "Electronics"
       },
       {
           "name": "Ipad",
@@ -219,7 +238,8 @@
           "image": "https://i.imgur.com/BGLmvO0.png",
           "description": "Consequat ex eu",
           "status": "Popular",
-          "id": "20"
+          "id": "20",
+          "category": "Electronics"
       },
       {
           "name": "MacBook",
@@ -228,7 +248,8 @@
           "image": "https://i.imgur.com/WJRePm8.png",
           "description": "Consequat ex eu",
           "status": "Best Sales",
-          "id": "21"
+          "id": "21",
+          "category": "Electronics"
       },
       {
           "name": "MacBook",
@@ -237,7 +258,8 @@
           "image": "https://i.imgur.com/WJRePm8.png",
           "description": "Consequat ex eu",
           "status": "Best Sales",
-          "id": "22"
+          "id": "22",
+          "category": "Electronics"
       },
       {
           "name": "MacBook",
@@ -246,7 +268,8 @@
           "image": "https://i.imgur.com/WJRePm8.png",
           "description": "Consequat ex eu",
           "status": "Best Sales",
-          "id": "23"
+          "id": "23",
+          "category": "Electronics"
       },
       {
           "name": "MacBook",
@@ -255,7 +278,8 @@
           "image": "https://i.imgur.com/WJRePm8.png",
           "description": "Consequat ex eu",
           "status": "Best Sales",
-          "id": "24"
+          "id": "24",
+          "category": "Electronics"
       },
       {
           "name": "MacBook",
@@ -264,7 +288,8 @@
           "image": "https://i.imgur.com/WJRePm8.png",
           "description": "Consequat ex eu",
           "status": "Best Matched",
-          "id": "25"
+          "id": "25",
+          "category": "Electronics"
       },
       {
           "name": "MacBook",
@@ -273,7 +298,8 @@
           "image": "https://i.imgur.com/WJRePm8.png",
           "description": "Consequat ex eu",
           "status": "Best Matched",
-          "id": "26"
+          "id": "26",
+          "category": "Electronics"
       },
       {
           "name": "MacBook",
@@ -282,7 +308,8 @@
           "image": "https://i.imgur.com/WJRePm8.png",
           "description": "Consequat ex eu",
           "status": "Popular",
-          "id": "27"
+          "id": "27",
+          "category": "Electronics"
       },
       {
           "name": "MacBook",
@@ -291,7 +318,8 @@
           "image": "https://i.imgur.com/WJRePm8.png",
           "description": "Consequat ex eu",
           "status": "Popular",
-          "id": "28"
+          "id": "28",
+          "category": "Electronics"
       },
       {
           "name": "MacBook",
@@ -300,7 +328,8 @@
           "image": "https://i.imgur.com/WJRePm8.png",
           "description": "Consequat ex eu",
           "status": "Popular",
-          "id": "29"
+          "id": "29",
+          "category": "Electronics"
       },
       {
           "name": "MacBook",
@@ -309,7 +338,8 @@
           "image": "https://i.imgur.com/WJRePm8.png",
           "description": "Consequat ex eu",
           "status": "Popular",
-          "id": "30"
+          "id": "30",
+          "category": "Electronics"
       }
     ],
     "productsOfFresh" : [
@@ -319,7 +349,8 @@
         "rating": 4,
         "image": "./assets/img/pear.png",
         "description": "Consequat ex eu",
-        "id": "1"
+        "id": "1",
+        "category": "Fresh"
       },
       {
         "name": "Avocado",
@@ -327,7 +358,8 @@
         "rating": 4,
         "image": "./assets/img/traibo1.png",
         "description": "Consequat ex eu",
-        "id": "2"
+        "id": "2",
+        "category": "Fresh"
       },
       {
         "name": "Cherry",
@@ -335,7 +367,8 @@
         "rating": 4,
         "image": "./assets/img/cherry.png",
         "description": "Consequat ex eu",
-        "id": "3"
+        "id": "3",
+        "category": "Fresh"
       },
       {
         "name": "Orange",
@@ -343,7 +376,8 @@
         "rating": 4,
         "image": "./assets/img/orange.png",
         "description": "Consequat ex eu",
-        "id": "4"
+        "id": "4",
+        "category": "Fresh"
       },
       {
         "name": "Apple",
@@ -351,7 +385,8 @@
         "rating": 4,
         "image": "./assets/img/apple.png",
         "description": "Consequat ex eu",
-        "id": "5"
+        "id": "5",
+        "category": "Fresh"
       },
       {
         "name": "Peach",
@@ -359,7 +394,8 @@
         "rating": 4,
         "image": "./assets/img/peach.png",
         "description": "Consequat ex eu",
-        "id": "6"
+        "id": "6",
+        "category": "Fresh"
       },
       {
         "name": "Watermelon",
@@ -367,7 +403,8 @@
         "rating": 4,
         "image": "./assets/img/watermelon.png",
         "description": "Consequat ex eu",
-        "id": "7"
+        "id": "7",
+        "category": "Fresh"
       },
       {
         "name": "Banana",
@@ -375,7 +412,8 @@
         "rating": 4,
         "image": "./assets/img/banana.png",
         "description": "Consequat ex eu",
-        "id": "8"
+        "id": "8",
+        "category": "Fresh"
       },
       {
         "name": "Grape",
@@ -383,7 +421,8 @@
         "rating": 4,
         "image": "./assets/img/grape.png",
         "description": "Consequat ex eu",
-        "id": "9"
+        "id": "9",
+        "category": "Fresh"
       },
       {
         "name": "Lemon",
@@ -391,7 +430,8 @@
         "rating": 4,
         "image": "./assets/img/lemon.png",
         "description": "Consequat ex eu",
-        "id": "10"
+        "id": "10",
+        "category": "Fresh"
       },
       {
         "name": "Mango",
@@ -399,7 +439,8 @@
         "rating": 4,
         "image": "./assets/img/mango.png",
         "description": "Consequat ex eu",
-        "id": "11"
+        "id": "11",
+        "category": "Fresh"
       },
       {
         "name": "Kiwi",
@@ -407,7 +448,8 @@
         "rating": 4,
         "image": "./assets/img/kiwi.png",
         "description": "Consequat ex eu",
-        "id": "12"
+        "id": "12",
+        "category": "Fresh"
       },
       {
         "name": "Strawberry",
@@ -415,7 +457,8 @@
         "rating": 4,
         "image": "./assets/img/strawberry.png",
         "description": "Consequat ex eu",
-        "id": "13"
+        "id": "13",
+        "category": "Fresh"
       },
       {
         "name": "Pineapple",
@@ -423,7 +466,8 @@
         "rating": 4,
         "image": "./assets/img/Pineapple.png",
         "description": "Consequat ex eu",
-        "id": "14"
+        "id": "14",
+        "category": "Fresh"
       },
       {
         "name": "Pomegranate",
@@ -431,7 +475,8 @@
         "rating": 4,
         "image": "./assets/img/pomegranate.png",
         "description": "Consequat ex eu",
-        "id": "15"
+        "id": "15",
+        "category": "Fresh"
       },
       {
         "name": "Coconut",
@@ -439,7 +484,8 @@
         "rating": 4,
         "image": "./assets/img/coconut.png",
         "description": "Consequat ex eu",
-        "id": "16"
+        "id": "16",
+        "category": "Fresh"
       }
     ]
   }
