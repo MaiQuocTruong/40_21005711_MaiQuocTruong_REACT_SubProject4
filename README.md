@@ -33,7 +33,7 @@
 
 Dự án **E-Commercial Market** là một ứng dụng đặt hàng được phát triển bằng **React Native**. Ứng dụng cho phép người dùng đặt hàng, xóa hàng, và điều chỉnh số lượng đơn hàng trong giỏ hàng và thực hiện thanh toán.
 
-![App Screenshot](./assets/1110.gif)
+![App Screenshot](./assets/1110_2_.gif)
 
 ---
 
