@@ -16,7 +16,8 @@ import FeedbackModal from '../components/FeedbackModal';
 
 const PaymentSuccess = () => {
     const route = useRoute();
-    const { selectedMethod, total } = route.params;
+    const selectedMethod = route.params?.selectedMethod || {};
+    const total = route.params?.total || 0;
     const navigation = useNavigation();
     const { clearCart } = useContext(CartContext); // Sử dụng clearCart từ CartContext
 

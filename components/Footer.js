@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { useNavigation } from '@react-navigation/native';
 
-export default function Footer({ navigation }) {
+export default function Footer({ user }) {
   const [activeTab, setActiveTab] = useState('Home');
+  const navigation = useNavigation();
 
   return (
     <View style={styles.footerContainer}>

@@ -11,6 +11,7 @@ import {
   SafeAreaView,
   ScrollView,
   Modal,
+  Alert,
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
@@ -23,6 +24,8 @@ const CartScreen = () => {
   const [itemToRemove, setItemToRemove] = useState(null);
   const [emptyCartModalVisible, setEmptyCartModalVisible] = useState(false);
   const navigation = useNavigation();
+  const [address, setAddress] = useState('');
+  const [phone, setPhone] = useState('');
 
   const total = cartItems.reduce((sum, item) => {
     const price = parseFloat(item.price.replace('$', ''));
@@ -57,9 +60,15 @@ const CartScreen = () => {
 
   const handleNextPress = () => {
     if (cartItems.length === 0) {
-      setEmptyCartModalVisible(true);
+        alert('Cart is empty', 'Please add some items to your cart before proceeding.');
+    } else if (!address || !phone) {
+        alert('Missing Information', 'Please fill in both Address and Phone.');
     } else {
-      navigation.navigate('Payment', { total });
+        navigation.navigate('Payment', { 
+            total, 
+            address, 
+            phone 
+        });
     }
   };
 
@@ -102,6 +111,16 @@ const CartScreen = () => {
             keyExtractor={(item) => item.id.toString()}
             contentContainerStyle={styles.productList}
           />
+
+          <Text style={styles.textLabel}>Address:</Text>
+          <View style={styles.textSection}>
+            <TextInput style={styles.textInput} value={address} onChangeText={setAddress} placeholder="Enter your address"/>
+          </View>
+
+          <Text style={styles.textLabel}>Phone:</Text>
+          <View style={styles.textSection}>
+            <TextInput style={styles.textInput} value={phone} onChangeText={setPhone} placeholder="Enter your phone number"/>
+          </View>
 
           <View style={styles.voucherSection}>
             <TextInput style={styles.voucherInput} placeholder="Enter voucher code"/>
@@ -227,10 +246,28 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginLeft: 10,
   },
+  textSection: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    marginVertical: 12,
+  },
+  textLabel: {
+    fontSize: 18,
+    fontWeight: '600',
+  },
   voucherSection: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginVertical: 12,
+  },
+  textInput: {
+    borderWidth: 1,
+    borderColor: '#ddd',
+    padding: 12,
+    width: '100%',
+    borderRadius: 8,
+    backgroundColor: '#f9f9f9',
   },
   voucherInput: {
     borderWidth: 1,

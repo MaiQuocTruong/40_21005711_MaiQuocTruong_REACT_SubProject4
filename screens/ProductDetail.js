@@ -6,16 +6,19 @@ import Dots from 'react-native-dots-pagination';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { CartContext } from '../contexts/CartContext';
 import { FontAwesome, Ionicons, MaterialIcons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ProductDetail = () => {
   const route = useRoute();
+  const [avatar, setAvatar] = useState(null);
   const navigation = useNavigation();
   const { product } = route.params;
   const [activeDot, setActiveDot] = useState(0); 
   const [isNotified, setIsNotified] = useState(false);
   const [relevantProducts, setRelevantProducts] = useState([]);
   const [reviews, setReviews] = useState([]);
-  const { addToCart } = useContext(CartContext);
+  const [showAllReviews, setShowAllReviews] = useState(false); // State quản lý hiển thị review
+  const { addToCart, getCartItemCount } = useContext(CartContext);
 
   const handleAddToCart = () => {
     addToCart(product);  
@@ -23,9 +26,26 @@ const ProductDetail = () => {
   };
 
   useEffect(() => {
+    const fetchAvatar = async () => {
+      try {
+        const storedAvatar = await AsyncStorage.getItem('userAvatar');
+        if (storedAvatar) {
+          setAvatar(JSON.parse(storedAvatar));  // Lấy avatar từ AsyncStorage
+        }
+      } catch (error) {
+        console.error('Lỗi khi lấy avatar từ AsyncStorage:', error);
+      }
+    };
+
+    fetchAvatar();
+  }, []);
+
+  const userAvatar = avatar ? { uri: `http://localhost:3000/uploads/${avatar}` } : require('../assets/personicon.png');
+
+  useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/reviews');
+        const response = await axios.get('http://localhost:3000/api/ecommerce/feedback');
         setReviews(response.data);
       } catch (error) {
         console.error('Error fetching reviews:', error);
@@ -38,7 +58,7 @@ const ProductDetail = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/productsOfFresh');
+        const response = await axios.get('http://localhost:3000/api/ecommerce/productsoffresh');
         setRelevantProducts(response.data);
       } catch (error) {
         console.error('Error fetching products:', error);
@@ -47,6 +67,18 @@ const ProductDetail = () => {
 
     fetchProducts();
   }, []);
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+  };
+
+  const toggleShowAllReviews = () => {
+    setShowAllReviews(!showAllReviews); // Chuyển đổi trạng thái hiển thị
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -67,9 +99,15 @@ const ProductDetail = () => {
               onPress={() => navigation.navigate('Cart')}
             >
               <Ionicons name="cart-outline" size={30} color="#9095a0"/>
+
+              {getCartItemCount() > 0 && (
+                <View style={styles.cartItemCount}>
+                  <Text style={styles.cartItemCountText}>{getCartItemCount()}</Text>
+                </View>
+              )}
             </TouchableOpacity>
 
-            <Image source={require('../assets/img/ava1.png')} style={styles.profileImage}/>
+            <Image source={userAvatar} style={styles.profileImage} />
           </View>
 
           {/* Product Image */}
@@ -130,23 +168,33 @@ const ProductDetail = () => {
           {/* Reviews Section */}
           <View style={styles.reviewsHeader}>
             <Text style={styles.reviewsTitle}>Reviews</Text>
-            <TouchableOpacity>
-              <Text style={styles.seeAllText}>See all</Text>
+            <TouchableOpacity onPress={toggleShowAllReviews}>
+              <Text style={styles.seeAllText}>{showAllReviews ? 'Show less' : 'See all'}</Text>
             </TouchableOpacity>
           </View>
           <ReviewsSummary/>
+          {/* danh sách những người reviews(feedback) */}
           <FlatList
-            data={reviews}
-            keyExtractor={(item) => item.id}
+            data={showAllReviews ? reviews : reviews.slice(0, 2)}
+            keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
                 <View style={styles.reviewItem}>
-                    <Image source={{ uri: item.avatar }} style={styles.reviewerAvatar} />
+                    <Image 
+                      source={{ uri: `http://localhost:3000/uploads/${item.avatar}` }} 
+                      style={styles.reviewerAvatar} 
+                    />
                     <View style={styles.reviewTextContainer}>
                         <View style={styles.reviewHeader}>
                             <Text style={styles.reviewerName}>{item.name}</Text>
-                            <Text style={styles.reviewDate}>{item.daysAgo}</Text>
+                            <Text style={styles.reviewDate}>{formatDate(item.days)}</Text>
                         </View>
                         <Text style={styles.reviewComment}>{item.comment}</Text>
+                        {item.image && (
+                          <Image 
+                            source={{ uri: `http://localhost:3000/uploads/${item.image}` }}
+                            style={styles.reviewImage} 
+                          />
+                        )}
                     </View>
                 </View>
             )}
@@ -236,6 +284,22 @@ const styles = StyleSheet.create({
   cartButton: {
     marginLeft: 10,
     padding: 10,
+  },
+  cartItemCount: {
+    position: 'absolute',
+    top: 6,
+    right: 4,
+    backgroundColor: 'red',
+    borderRadius: 10,
+    width: 20,
+    height: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  cartItemCountText: {
+    color: 'white',
+    fontSize: 12,
+    fontWeight: 'bold',
   },
   profileImage: {
     width: 40,
@@ -332,10 +396,11 @@ const styles = StyleSheet.create({
     borderBottomColor: '#f0f0f0',
   },
   reviewerAvatar: {
-    width: 40,
-    height: 40,
+    width: 70,
+    height: 70,
     borderRadius: 20,
     marginRight: 12,
+    top: -25,
   },
   reviewTextContainer: {
     flex: 1,
@@ -357,6 +422,13 @@ const styles = StyleSheet.create({
   reviewComment: {
     fontSize: 14,
     color: '#555',
+  },
+  reviewImage: {
+    width: 70,   
+    height: 70,  
+    borderRadius: 8, 
+    marginRight: 10,
+    resizeMode: 'contain'
   },
   relevantProductsList: {
     justifyContent: 'center',

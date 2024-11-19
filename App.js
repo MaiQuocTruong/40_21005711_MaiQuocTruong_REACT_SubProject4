@@ -2,6 +2,10 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from './screens/LoginScreen';
+import SignUpScreen from './screens/SignUpScreen';
+import ProfileScreen from './screens/ProfileScreen';
+import ForgetPassScreen from './screens/ForgetPassScreen';
+import Management from './screens/Management';
 import HomeScreen from './screens/HomeScreen';
 import ElectronicsScreen from './screens/ElectronicsScreen';
 import FreshScreen from './screens/FreshScreen';
@@ -18,11 +22,11 @@ export default function App() {
   return (
     <CartProvider>
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="HomeScreen">
+      <Stack.Navigator initialRouteName="LoginScreen">
         <Stack.Screen 
-          name="Login" 
+          name="LoginScreen" 
           component={LoginScreen} 
-          options={{ headerShown: false }} // Ẩn header cho màn hình đăng nhập
+          options={{ headerShown: false }} 
         />
         <Stack.Screen 
           name="HomeScreen" 
@@ -37,6 +41,26 @@ export default function App() {
             },
             header: () => null,
           }}
+        />
+        <Stack.Screen 
+          name="SignUpScreen" 
+          component={SignUpScreen} 
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen 
+          name="ProfileScreen" 
+          component={ProfileScreen} 
+          options={{ headerShown: false }} 
+        />
+        <Stack.Screen 
+          name="ForgetPassScreen" 
+          component={ForgetPassScreen} 
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen 
+          name="Management" 
+          component={Management} 
+          options={{ headerShown: false }}
         />
         <Stack.Screen 
           name="Electronics" 

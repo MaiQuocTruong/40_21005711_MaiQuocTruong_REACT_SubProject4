@@ -1,11 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { View, Text, Image, ScrollView, TextInput, FlatList, TouchableOpacity, StyleSheet, SafeAreaView, Platform } from 'react-native';
 import axios from 'axios';
 import Footer from '../components/Footer';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { MaterialIcons, Ionicons } from '@expo/vector-icons';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { CartContext } from '../contexts/CartContext';
 
 export default function HomeScreen({ navigation }) {
+  const { getCartItemCount } = useContext(CartContext);
+  const route = useRoute();
+  const user = route.params?.user;
+  const [avatar, setAvatar] = useState(null);
   const [categories, setCategories] = useState([]);
   const [deals, setDeals] = useState([]);
   const [recommendations, setRecommendations] = useState([]);
@@ -17,20 +24,37 @@ export default function HomeScreen({ navigation }) {
   ];
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchAvatar = async () => {
       try {
-        const categoriesResponse = await axios.get('http://localhost:3000/categoriesOfHome');
-        const dealsResponse = await axios.get('http://localhost:3000/deals');
-        const recommendationsResponse = await axios.get('http://localhost:3000/recommendations');
-
-        setCategories(categoriesResponse.data);
-        setDeals(dealsResponse.data);
-        setRecommendations(recommendationsResponse.data);
+        const storedAvatar = await AsyncStorage.getItem('userAvatar');
+        if (storedAvatar) {
+          setAvatar(JSON.parse(storedAvatar));  // Lấy avatar từ AsyncStorage
+        }
       } catch (error) {
-        console.error(error);
+        console.error('Lỗi khi lấy avatar từ AsyncStorage:', error);
       }
     };
 
+    fetchAvatar();
+  }, []);
+
+  const userAvatar = avatar ? { uri: `http://localhost:3000/uploads/${avatar}` } : require('../assets/personicon.png');
+
+  const fetchData = async () => {
+    try {
+      const categoriesResponse = await axios.get('http://localhost:3000/api/ecommerce/home');
+      const dealsResponse = await axios.get('http://localhost:3000/api/ecommerce/deals');
+      const recommendationsResponse = await axios.get('http://localhost:3000/api/ecommerce/recommendations');
+
+      setCategories(categoriesResponse.data);
+      setDeals(dealsResponse.data);
+      setRecommendations(recommendationsResponse.data);
+    } catch (error) {
+      console.error('Lỗi khi tải dữ liệu: ', error);
+    }
+  };
+
+  useEffect(() => {
     fetchData();
   }, []);
 
@@ -50,12 +74,17 @@ export default function HomeScreen({ navigation }) {
             <Text style={styles.headerTitle}>All deals</Text>
             <TouchableOpacity 
               style={styles.cartButton} 
-              // onPress={() => navigation.navigate('Cart')}
+              onPress={() => navigation.navigate('Cart')}
             >
               <Ionicons name="cart-outline" size={30} color="#9095a0"/>
+              {getCartItemCount() > 0 && (
+                <View style={styles.cartItemCount}>
+                  <Text style={styles.cartItemCountText}>{getCartItemCount()}</Text>
+                </View>
+              )}
             </TouchableOpacity>
 
-            <Image source={require('../assets/img/ava1.png')} style={styles.profileImage}/>
+            <Image source={userAvatar} style={styles.profileImage} />
           </View>
 
           <View style={styles.searchContainer}>
@@ -79,16 +108,16 @@ export default function HomeScreen({ navigation }) {
           data={categories}
           horizontal
           showsHorizontalScrollIndicator={false}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <TouchableOpacity 
               style={styles.categoryContainer} 
               onPress={() => { 
                 if (item.name === 'Electronics') {
-                  navigation.navigate('Electronics');
+                  navigation.navigate('Electronics', { avatar: user?.avatar });
                 } 
                 else if (item.name === 'Fresh Fruits') {
-                  navigation.navigate('Fresh');
+                  navigation.navigate('Fresh', { avatar: user?.avatar });
                 }
               }}
             >
@@ -137,7 +166,7 @@ export default function HomeScreen({ navigation }) {
             data={recommendations}
             horizontal
             showsHorizontalScrollIndicator={false}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
               <View style={styles.recommendationItem}>
                 <Image source={{ uri: item.image }} style={styles.recommendationImage} />
@@ -192,6 +221,22 @@ const styles = StyleSheet.create({
   cartButton: {
     marginLeft: 10,
     padding: 10,
+  },
+  cartItemCount: {
+    position: 'absolute',
+    top: 6,
+    right: 4,
+    backgroundColor: 'red',
+    borderRadius: 10,
+    width: 20,
+    height: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  cartItemCountText: {
+    color: 'white',
+    fontSize: 12,
+    fontWeight: 'bold',
   },
   profileImage: {
     width: 40,

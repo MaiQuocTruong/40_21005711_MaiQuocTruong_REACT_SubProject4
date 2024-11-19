@@ -4,10 +4,15 @@ import axios from 'axios';
 import Footer from '../components/Footer';
 import { MaterialIcons, Ionicons } from '@expo/vector-icons';
 import Dots from 'react-native-dots-pagination'; 
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { CartContext } from '../contexts/CartContext';
 import ModalFilter from '../components/ModalFilter';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 export default function ElectronicsScreen() {
+  const route = useRoute();
+  // const { avatar } = route.params || {};
+  const [avatar, setAvatar] = useState(null);
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -20,6 +25,23 @@ export default function ElectronicsScreen() {
   const [searchText, setSearchText] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [priceRange, setPriceRange] = useState([10, 1000]);
+
+  useEffect(() => {
+    const fetchAvatar = async () => {
+      try {
+        const storedAvatar = await AsyncStorage.getItem('userAvatar');
+        if (storedAvatar) {
+          setAvatar(JSON.parse(storedAvatar));  // Lấy avatar từ AsyncStorage
+        }
+      } catch (error) {
+        console.error('Lỗi khi lấy avatar từ AsyncStorage:', error);
+      }
+    };
+
+    fetchAvatar();
+  }, []);
+
+  const userAvatar = avatar ? { uri: `http://localhost:3000/uploads/${avatar}` } : require('../assets/personicon.png');
 
   const filterByPriceRange = (products, range, status) => {
     return products.filter(product => {
@@ -34,13 +56,13 @@ export default function ElectronicsScreen() {
     setFilteredProducts(filtered);
   };
 
-  const { addToCart } = useContext(CartContext);
+  const { addToCart, getCartItemCount } = useContext(CartContext);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const categoriesResponse = await axios.get('http://localhost:3000/categoriesOfElectronic');
-        const productsResponse = await axios.get('http://localhost:3000/productsOfElectronics');
+        const categoriesResponse = await axios.get('http://localhost:3000/api/ecommerce/categoriesofelectronic');
+        const productsResponse = await axios.get('http://localhost:3000/api/ecommerce/productsofelectronics');
         setCategories(categoriesResponse.data);
         const productsWithCategory = productsResponse.data.map(product => ({
           ...product,
@@ -125,9 +147,19 @@ export default function ElectronicsScreen() {
               onPress={() => navigation.navigate('Cart')}
             >
               <Ionicons name="cart-outline" size={30} color="#9095a0"/>
+              {/* Display red circle with number of items in the cart */}
+              {getCartItemCount() > 0 && (
+                <View style={styles.cartItemCount}>
+                  <Text style={styles.cartItemCountText}>{getCartItemCount()}</Text>
+                </View>
+              )}
             </TouchableOpacity>
 
-            <Image source={require('../assets/img/ava1.png')} style={styles.profileImage}/>
+            {/* <Image 
+              source={avatar ? { uri: `http://localhost:3000/uploads/${avatar}` } : require('../assets/img/ava1.png')} 
+              style={styles.profileImage} 
+            /> */}
+            <Image source={userAvatar} style={styles.profileImage} />
           </View>
 
           <View style={styles.searchContainer}>
@@ -162,11 +194,11 @@ export default function ElectronicsScreen() {
                 key={category.id}
                 onPress={() => filterProducts(category.id, category.name)}
                 style={[styles.categoryContainer,
-                  category.id === "1" && { backgroundColor: '#D8BFD8' },
-                  category.id === "2" && { backgroundColor: '#ADD8E6' },
-                  category.id === "3" && { backgroundColor: '#FFE4B5' },
+                  category.id === 1 && { backgroundColor: '#D8BFD8' },
+                  category.id === 2 && { backgroundColor: '#ADD8E6' },
+                  category.id === 3 && { backgroundColor: '#FFE4B5' },
                   { borderColor: selectedCategoryId === category.id ? 
-                    (category.id === "1" ? '#c478f0' : category.id === "2" ? '#81a7de' : '#fccd7c') : 'transparent' }
+                    (category.id === 1 ? '#c478f0' : category.id === 2 ? '#81a7de' : '#fccd7c') : 'transparent' }
                 ]}>
                 <Image
                   source={{ uri: category.icon }}
@@ -190,7 +222,7 @@ export default function ElectronicsScreen() {
           ) : (
             <FlatList
             data={showAllProducts ? filteredProducts : filteredProducts.slice(0, 4)} 
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
             <TouchableOpacity style={styles.productItem} onPress={() => handleProductPress(item)}>
               <Image source={{ uri: item.image }} style={styles.productImage} />
@@ -268,6 +300,22 @@ const styles = StyleSheet.create({
   cartButton: {
     marginLeft: 10,
     padding: 10,
+  },
+  cartItemCount: {
+    position: 'absolute',
+    top: 6,
+    right: 4,
+    backgroundColor: 'red',
+    borderRadius: 10,
+    width: 20,
+    height: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  cartItemCountText: {
+    color: 'white',
+    fontSize: 12,
+    fontWeight: 'bold',
   },
   profileImage: {
     width: 40,

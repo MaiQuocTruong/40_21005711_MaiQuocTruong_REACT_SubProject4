@@ -25,6 +25,11 @@ export const CartProvider = ({ children }) => {
     });
   };
 
+  // Lấy số lượng sản phẩm trong giỏ hàng
+  const getCartItemCount = () => {
+    return cartItems.reduce((total, item) => total + item.quantity, 0);
+  };
+  
   // Xóa sản phẩm khỏi giỏ hàng
   const removeFromCart = (productId, productCategory) => {
     setCartItems((prevItems) => {
@@ -47,7 +52,7 @@ export const CartProvider = ({ children }) => {
   };
 
   return (
-    <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, clearCart }}>
+    <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, clearCart, getCartItemCount }}>
       {children}
     </CartContext.Provider>
   );

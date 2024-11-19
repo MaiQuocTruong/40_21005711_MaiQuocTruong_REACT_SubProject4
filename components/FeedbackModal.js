@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     View,
     Text,
@@ -7,14 +7,38 @@ import {
     Image,
     Modal,
     StyleSheet,
+    Platform
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Ionicons } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+
 const FeedbackModal = ({ isVisible, onClose }) => {
     const [selectedOptions, setSelectedOptions] = useState({});
     const [feedback, setFeedback] = useState('');
     const [rating, setRating] = useState(0);
     const [selectedMood, setSelectedMood] = useState(null);
+    const [imageUri, setImageUri] = useState(null); // State to store image URI
+    const [imageFile, setImageFile] = useState(null);
+    const [errorMessage, setErrorMessage] = useState("");
+    const [userID, setUserID] = useState(null);
+
+    // Lấy userID từ AsyncStorage nếu không truyền từ HomeScreen
+    useEffect(() => {
+        const fetchUserID = async () => {
+            try {
+                const storedUserID = await AsyncStorage.getItem('userID');
+                if (storedUserID) {
+                    setUserID(JSON.parse(storedUserID)); // Lưu vào state
+                }
+            } catch (error) {
+                console.error('Lỗi khi lấy userID từ AsyncStorage:', error);
+            }
+        };
+        fetchUserID();
+    }, []);
 
     const toggleOption = (option) => {
         setSelectedOptions(prevState => ({
@@ -30,6 +54,74 @@ const FeedbackModal = ({ isVisible, onClose }) => {
     const handleMoodSelect = (mood) => {
         setSelectedMood(mood);
     };
+
+    const handleImagePicker = async () => {
+        if (Platform.OS === 'web') {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    setImageUri(URL.createObjectURL(file)); // Để hiển thị ảnh trên web
+                    setImageFile(file); // Để upload lên server
+                }
+            };
+            input.click();
+        } else {
+            const result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: 1,
+            });
+  
+            if (!result.canceled) {
+                setImageUri(result.assets[0].uri);
+                setImageFile({
+                    uri: result.assets[0].uri,
+                    type: 'image/png', // type của ảnh
+                    name: 'avatar.png', // tên file
+                });
+            }
+        }
+    };
+
+    const handleRemoveImage = () => {
+        setImageUri(null); // Remove the selected image
+    };
+
+    const handleSubmit = async () => {
+        if (!feedback || !imageUri) {
+            setErrorMessage("Vui lòng nhập đầy đủ thông tin.");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('comment', feedback);
+        formData.append('accountID', userID); // Sử dụng userID từ AsyncStorage
+        if (imageFile) {
+            formData.append('image', imageFile);
+        }
+
+        try {
+            const response = await axios.post('http://localhost:3000/submit-feedback', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+
+            if (response.status === 200) {
+                alert('Phản hồi đã được gửi thành công!');
+                onClose();
+            } else {
+                alert('Gửi phản hồi thất bại. Vui lòng thử lại.');
+            }
+        } catch (error) {
+            console.error('Lỗi khi gửi phản hồi:', error);
+            alert('Đã xảy ra lỗi. Vui lòng thử lại sau.');
+        }
+    };      
 
     return (
         <Modal visible={isVisible} transparent={true} animationType="slide">
@@ -73,10 +165,7 @@ const FeedbackModal = ({ isVisible, onClose }) => {
                         {['Service', 'Quantity', 'Payment', 'Delivery', 'Promotion', 'Gift'].map((option, index) => (
                             <TouchableOpacity
                                 key={index}
-                                style={[
-                                    styles.optionButton,
-                                    selectedOptions[option] && styles.optionSelected
-                                ]}
+                                style={[styles.optionButton, selectedOptions[option] && styles.optionSelected]}
                                 onPress={() => toggleOption(option)}
                             >
                                 <Text style={[styles.optionText, selectedOptions[option] ? styles.optionTextSelected : null]}>{option}</Text>
@@ -105,16 +194,18 @@ const FeedbackModal = ({ isVisible, onClose }) => {
                     {/* Image Upload Section */}
                     <Text style={styles.uploadLabel}>Upload images</Text>
                     <View style={styles.imageUploadContainer}>
-                        <TouchableOpacity style={styles.imageUploadButton}>
+                        <TouchableOpacity style={styles.imageUploadButton} onPress={handleImagePicker}>
                             <Ionicons name="add-outline" size={30} color="#CCC" />
                         </TouchableOpacity>
-                        {/* Sample uploaded image */}
-                        <View style={styles.uploadedImage}>
-                            <Image source={require('../assets/img/apple.png')} style={styles.image} />
-                            <TouchableOpacity style={styles.removeImageButton}>
-                                <Ionicons name="close-outline" size={16} color="#FFF" />
-                            </TouchableOpacity>
-                        </View>
+                        {/* Display uploaded image */}
+                        {imageUri && (
+                            <View style={styles.uploadedImage}>
+                                <Image source={{ uri: imageUri }} style={styles.image} />
+                                <TouchableOpacity style={styles.removeImageButton} onPress={handleRemoveImage}>
+                                    <Ionicons name="close-outline" size={16} color="#FFF" />
+                                </TouchableOpacity>
+                            </View>
+                        )}
                     </View>
 
                     {/* Rating Section */}
@@ -133,7 +224,7 @@ const FeedbackModal = ({ isVisible, onClose }) => {
                     </View>
 
                     {/* Submit Button */}
-                    <TouchableOpacity style={styles.submitButton} onPress={onClose}>
+                    <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
                         <Text style={styles.submitButtonText}>Submit</Text>
                     </TouchableOpacity>
                 </View>
@@ -224,8 +315,8 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         color: '#6c757d', 
         fontSize: 16,
-    },    
-    uploadLabel:{
+    },
+    uploadLabel: {
         flexDirection: 'row',
         alignItems: 'center',
         alignSelf: 'flex-start',
@@ -238,8 +329,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         marginBottom: 20,
-        alignSelf: 'flex-start', 
-    },    
+        alignSelf: 'flex-start'
+    },
     imageUploadButton: {
         width: 60,
         height: 60,
@@ -272,20 +363,19 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     star: {
-        marginHorizontal: 5,
+        marginHorizontal: 3,
     },
     submitButton: {
-        flex: 1,
-        width: '100%',
         backgroundColor: '#00bdd6',
-        paddingVertical: 10,
-        paddingHorizontal: 40,
-        borderRadius: 6,
+        paddingVertical: 12,
+        paddingHorizontal: 30,
+        borderRadius: 25,
+        marginTop: 20,
     },
     submitButtonText: {
+        fontSize: 18,
         color: '#fff',
-        fontSize: 16,
-        textAlign: 'center'
+        fontWeight: '600',
     },
 });
 

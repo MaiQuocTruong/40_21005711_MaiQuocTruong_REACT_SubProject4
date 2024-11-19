@@ -9,24 +9,25 @@ import {
     Platform,
     SafeAreaView,
     Modal,
-    ActivityIndicator, // Thêm import này để sử dụng ActivityIndicator
+    ActivityIndicator,
 } from 'react-native';
 import axios from 'axios';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const PaymentScreen = () => {
   const [paymentMethods, setPaymentMethods] = useState([]);
   const [selectedMethod, setSelectedMethod] = useState(null);
   const [isModalVisible, setModalVisible] = useState(false);
   const [isAlertVisible, setAlertVisible] = useState(false);
-  const [loading, setLoading] = useState(false); // Thêm trạng thái loading
+  const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
   const route = useRoute();
   const total = route.params?.total;
 
   useEffect(() => {
-    axios.get('http://localhost:3000/paymentMethods')
+    axios.get('http://localhost:3000/api/ecommerce/paymentmethods')
       .then(response => {
         setPaymentMethods(response.data);
         const selected = response.data.find(method => method.selected);
@@ -47,16 +48,35 @@ const PaymentScreen = () => {
     }
   };
 
-  const confirmPayment = () => {
-    const selectedMethodDetails = paymentMethods.find(method => method.id === selectedMethod);
-    
+  const confirmPayment = async () => {
     setModalVisible(false);
-    setLoading(true); // Bắt đầu loading
+    setLoading(true);
 
-    // Chờ 2 giây trước khi điều hướng
-    setTimeout(() => {
-      setLoading(false); // Dừng loading
-      navigation.navigate('PaymentSuccess', { selectedMethod: selectedMethodDetails, total });
+    const accountID = await AsyncStorage.getItem('userID');
+    const payload = {
+        address: route.params.address,
+        phone: route.params.phone,
+        accountID: JSON.parse(accountID),
+        paymentID: selectedMethod,
+    };
+
+    setTimeout(async () => {
+        try {
+            const response = await axios.post('http://localhost:3000/api/ecommerce/bill', payload);
+            if (response.status === 200) {
+                navigation.navigate('PaymentSuccess', {
+                    selectedMethod: paymentMethods.find((method) => method.id === selectedMethod),
+                    total: route.params.total,
+                });
+            } else {
+                alert('Error', response.data.message || 'Failed to process payment');
+            }
+        } catch (error) {
+            console.error('Error saving bill:', error);
+            alert('Error', 'An error occurred while processing your payment.');
+        } finally {
+            setLoading(false);
+        }
     }, 1000);
   };
 
