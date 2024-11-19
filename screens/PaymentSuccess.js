@@ -25,7 +25,7 @@ const PaymentSuccess = () => {
         clearCart();
     }, []);
 
-    const [rating, setRating] = useState(0); // State to manage selected star rating
+    const [rating, setRating] = useState(4); // State to manage selected star rating
     const [isFeedbackModalVisible, setFeedbackModalVisible] = useState(false); // State for modal visibility
 
     // Show feedback modal after 1 second

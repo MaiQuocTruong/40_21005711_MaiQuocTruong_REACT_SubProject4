@@ -12,7 +12,7 @@ import {
     ActivityIndicator,
 } from 'react-native';
 import axios from 'axios';
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -148,9 +148,17 @@ const PaymentScreen = () => {
             keyExtractor={item => item.id.toString()}
             style={styles.paymentList}
           />
+
+          {/* Button Pay now */}
           <TouchableOpacity style={styles.payButton} onPress={handlePayNow}>
             <MaterialIcons name="payment" size={24} color="#fff" style={styles.icon}/>
             <Text style={styles.payButtonText}>Pay now</Text>
+          </TouchableOpacity>
+
+          {/* Button add payment method*/}
+          <TouchableOpacity style={styles.addPayButton}>
+            <MaterialCommunityIcons  name="credit-card-plus-outline" size={24} color="#00bdd6" style={styles.icon}/>
+            <Text style={styles.addPayButtonText}>Add payment method</Text>
           </TouchableOpacity>
         </View>
 
@@ -281,12 +289,29 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
+    marginBottom: 20,
+  },
+  addPayButton: {
+    borderWidth: 1,
+    borderColor: '#00bdd6',
+    paddingVertical: 12,
+    borderRadius: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
   },
   icon: {
     marginRight: 8,
   },
   payButtonText: {
     color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  addPayButtonText: {
+    color: '#00bdd6',
     fontSize: 18,
     fontWeight: 'bold',
     textAlign: 'center',
