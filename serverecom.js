@@ -110,14 +110,97 @@ app.get("/api/ecommerce/productsoffresh", (req, res) => {
 });
 
 app.get("/api/ecommerce/paymentmethods", (req, res) => {
-    const query = "SELECT * FROM paymentmethods";
+    const accountID = req.query.accountID; // Lấy accountID từ query params
+    const query = "SELECT * FROM paymentmethods WHERE accountID = ?";
+    db.query(query, [accountID], (err, results) => {
+        if (err) {
+            console.error("Lỗi khi truy vấn paymentmethods: ", err);
+            res.status(500).json({ error: "Lỗi máy chủ" });
+            return;
+        }
+        res.status(200).json(results);
+    });
+});
+
+// Lấy danh sách từ bảng brandpayment
+app.get('/api/ecommerce/brandpayment', (req, res) => {
+    const query = 'SELECT * FROM brandpayment';
     db.query(query, (err, results) => {
-      if (err) {
-        console.error("Lỗi khi truy vấn paymentmethods: ", err);
-        res.status(500).json({ error: "Lỗi máy chủ" });
-        return;
-      }
-      res.status(200).json(results);
+        if (err) {
+            console.error('Lỗi khi truy vấn brandpayment:', err);
+            res.status(500).json({ error: 'Lỗi máy chủ' });
+            return;
+        }
+        res.status(200).json(results);
+    });
+});
+
+// Lưu thông tin thanh toán vào paymentmethods
+// app.post('/api/ecommerce/add-paymentmethods', express.json(), (req, res) => {
+//     const { type, number, email, brand, accountID, brandID } = req.body;
+
+//     const query = `
+//         INSERT INTO paymentmethods (type, number, email, brand, accountID, brandID)
+//         VALUES (?, ?, ?, ?, ?, ?)
+//     `;
+//     db.query(query, [type, number || null, email || null, brand, accountID, brandID], (err, result) => {
+//         if (err) {
+//             console.error('Lỗi khi thêm phương thức thanh toán:', err);
+//             res.status(500).json({ error: 'Lỗi máy chủ' });
+//             return;
+//         }
+//         // Trả về phương thức thanh toán mới được thêm
+//         const newPaymentMethod = {
+//             id: result.insertId, // Lấy id của bản ghi mới được thêm
+//             type,
+//             number,
+//             email,
+//             brand,
+//             accountID,
+//             brandID
+//         };
+//         res.status(200).json(newPaymentMethod);
+//     });
+// });
+app.post('/api/ecommerce/add-paymentmethods', express.json(), (req, res) => {
+    const { type, number, email, brand, accountID, brandID } = req.body;
+
+    // Lấy MAX(id) hiện tại từ bảng paymentmethods
+    const getMaxIdQuery = 'SELECT MAX(id) AS maxId FROM paymentmethods';
+    db.query(getMaxIdQuery, (err, result) => {
+        if (err) {
+            console.error('Lỗi khi lấy MAX(id):', err);
+            res.status(500).json({ error: 'Lỗi máy chủ' });
+            return;
+        }
+
+        const maxId = result[0].maxId || 0; // Nếu bảng rỗng, maxId là 0
+        const newId = maxId + 1;
+
+        // Thêm dữ liệu vào bảng paymentmethods với id mới
+        const insertQuery = `
+            INSERT INTO paymentmethods (id, type, number, email, brand, accountID, brandID)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        `;
+        db.query(insertQuery, [newId, type, number || null, email || null, brand, accountID, brandID], (err, result) => {
+            if (err) {
+                console.error('Lỗi khi thêm phương thức thanh toán:', err);
+                res.status(500).json({ error: 'Lỗi máy chủ' });
+                return;
+            }
+
+            // Trả về phương thức thanh toán mới được thêm
+            const newPaymentMethod = {
+                id: newId, // ID đã được tạo thủ công
+                type,
+                number,
+                email,
+                brand,
+                accountID,
+                brandID,
+            };
+            res.status(200).json(newPaymentMethod);
+        });
     });
 });
 
@@ -135,6 +218,26 @@ app.post('/api/ecommerce/bill', express.json(), (req, res) => {
     });
 });
 
+app.get('/bills', (req, res) => {
+    const query = `
+        SELECT 
+            bill.billID, 
+            bill.address, 
+            bill.phone, 
+            account.name, 
+            account.id,
+            paymentmethods.brand
+        FROM 
+            bill
+        INNER JOIN account ON bill.accountID = account.id
+        INNER JOIN paymentmethods ON bill.paymentID = paymentmethods.id
+        ORDER BY bill.billID ASC
+    `;
+    db.query(query, (err, result) => {
+        if (err) throw err;
+        res.json(result);
+    });
+});
 
 // Endpoint to fetch all accounts
 app.get('/accounts', (req, res) => {
@@ -172,13 +275,32 @@ app.post('/submit-feedback', upload.single('image'), (req, res) => {
     const days = new Date().toISOString().split('T')[0];
     const image = req.file ? req.file.filename : null; // Gán null nếu không có ảnh
 
-    const query = 'INSERT INTO feedback (comment, days, image, accountID) VALUES (?, ?, ?, ?)';
-    db.query(query, [comment, days, image, accountID], (err, result) => {
+    // Lấy MAX(idfb) hiện tại từ bảng feedback
+    const getMaxIdQuery = 'SELECT MAX(idfb) AS maxId FROM feedback';
+    db.query(getMaxIdQuery, (err, result) => {
         if (err) {
-            console.error('Lỗi khi thêm phản hồi vào cơ sở dữ liệu: ', err);
-            return res.status(500).json({ error: 'Lỗi máy chủ' });
+            console.error('Lỗi khi lấy MAX(idfb):', err);
+            return res.status(500).json({ error: 'Lỗi máy chủ.' });
         }
-        res.status(200).json({ message: 'Phản hồi đã được lưu thành công' });
+
+        const maxId = result[0].maxId || 0; // Nếu bảng rỗng, maxId là 0
+        const newId = maxId + 1;
+
+        // Thêm phản hồi mới vào bảng feedback với idfb mới
+        const insertQuery = `
+            INSERT INTO feedback (idfb, comment, days, image, accountID)
+            VALUES (?, ?, ?, ?, ?)
+        `;
+        const values = [newId, comment, days, image, accountID];
+
+        db.query(insertQuery, values, (err, result) => {
+            if (err) {
+                console.error('Lỗi khi thêm phản hồi vào cơ sở dữ liệu:', err);
+                return res.status(500).json({ error: 'Lỗi máy chủ.' });
+            }
+
+            res.status(201).json({ message: 'Phản hồi đã được lưu thành công.', feedbackId: newId });
+        });
     });
 });
 
@@ -193,6 +315,7 @@ app.get("/api/ecommerce/feedback", (req, res) => {
             account.avatar
         FROM feedback
         JOIN account ON feedback.accountID = account.id
+        ORDER BY feedback.idfb ASC
     `;
     db.query(query, (err, results) => {
         if (err) {
@@ -204,6 +327,85 @@ app.get("/api/ecommerce/feedback", (req, res) => {
     });
 });
 
+// API thêm sản phẩm electronics mới
+app.post('/api/add-productelectronics', upload.single('image'), (req, res) => {
+    const { name, price, rating, description, status, category } = req.body;
+
+    // Kiểm tra dữ liệu đầu vào
+    if (!name || !price || !rating || !category || !req.file) {
+        return res.status(400).json({ error: 'Vui lòng điền đầy đủ thông tin và tải lên ảnh.' });
+    }
+
+    const imagePath = `http://localhost:3000/uploads/${req.file.filename}`;
+
+    // Lấy MAX(id) hiện tại trong bảng productsofelectronics
+    const getMaxIdQuery = 'SELECT MAX(id) AS maxId FROM productsofelectronics';
+    db.query(getMaxIdQuery, (err, result) => {
+        if (err) {
+            console.error('Lỗi khi lấy MAX(id):', err);
+            return res.status(500).json({ error: 'Lỗi máy chủ.' });
+        }
+
+        const maxId = result[0].maxId || 0; // Nếu bảng rỗng, maxId là 0
+        const newId = maxId + 1;
+
+        // Thêm sản phẩm mới với id mới
+        const insertQuery = `
+            INSERT INTO productsofelectronics (id, name, price, rating, image, description, status, category)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        `;
+        const values = [newId, name, price, rating, imagePath, description, status, category];
+
+        db.query(insertQuery, values, (err, result) => {
+            if (err) {
+                console.error('Lỗi khi thêm sản phẩm:', err);
+                return res.status(500).json({ error: 'Lỗi máy chủ.' });
+            }
+
+            res.status(201).json({ message: 'Thêm sản phẩm thành công.', productId: newId });
+        });
+    });
+});
+
+// API thêm sản phẩm fresh mới
+app.post('/api/add-productfresh', upload.single('image'), (req, res) => {
+    const { name, price, rating, description, category } = req.body;
+
+    // Kiểm tra dữ liệu đầu vào
+    if (!name || !price || !rating || !category || !req.file) {
+        return res.status(400).json({ error: 'Vui lòng điền đầy đủ thông tin và tải lên ảnh.' });
+    }
+
+    const imagePath = `http://localhost:3000/uploads/${req.file.filename}`;
+
+    // Lấy MAX(id) hiện tại trong bảng productsoffresh
+    const getMaxIdQuery = 'SELECT MAX(id) AS maxId FROM productsoffresh';
+    db.query(getMaxIdQuery, (err, result) => {
+        if (err) {
+            console.error('Lỗi khi lấy MAX(id):', err);
+            return res.status(500).json({ error: 'Lỗi máy chủ.' });
+        }
+
+        const maxId = result[0].maxId || 0; // Nếu bảng rỗng, maxId là 0
+        const newId = maxId + 1;
+
+        // Thêm sản phẩm mới với id mới
+        const insertQuery = `
+            INSERT INTO productsoffresh (id, name, price, rating, image, description, category)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        `;
+        const values = [newId, name, price, rating, imagePath, description, category];
+
+        db.query(insertQuery, values, (err, result) => {
+            if (err) {
+                console.error('Lỗi khi thêm sản phẩm:', err);
+                return res.status(500).json({ error: 'Lỗi máy chủ.' });
+            }
+
+            res.status(201).json({ message: 'Thêm sản phẩm thành công.', productId: newId });
+        });
+    });
+});
 
 // Endpoint để đăng ký tài khoản
 app.post('/register', upload.single('avatar'), (req, res) => {
@@ -296,26 +498,40 @@ app.delete('/delete-account', express.json(), (req, res) => {
     });
 });
 
-// Endpoint to update user details (excluding id, username, email, role)
-app.put('/update-user', express.json(), (req, res) => {
-    const { id, name, password, avatar } = req.body;
-    const dateUpdated = new Date();  // Set current date for dateAdded and lastActive
+// Endpoint to update user
+// app.put('/update-user', express.json(), (req, res) => {
+//     const { id, name, password, avatar } = req.body;
+//     const dateUpdated = new Date();  // Set current date for dateAdded and lastActive
+//     const query = `
+//         UPDATE Account 
+//         SET 
+//             name = ?, 
+//             password = ?, 
+//             avatar = ?, 
+//             dateAdded = ?, 
+//             lastActive = ? 
+//         WHERE id = ?
+//     `;
+    
+//     db.query(query, [name, password, avatar, dateUpdated, dateUpdated, id], (err, result) => {
+//         if (err) {
+//             return res.status(500).json({ error: 'Database error' });
+//         }
+//         res.json({ message: 'User updated successfully' });
+//     });
+// });
+app.put('/update-user', upload.single('avatar'), (req, res) => {
+    const { id, name, password } = req.body;
+    const avatar = req.file ? req.file.filename : null;
+  
     const query = `
-        UPDATE Account 
-        SET 
-            name = ?, 
-            password = ?, 
-            avatar = ?, 
-            dateAdded = ?, 
-            lastActive = ? 
+        UPDATE account 
+        SET name = ?, password = ?, avatar = ?
         WHERE id = ?
     `;
-    
-    db.query(query, [name, password, avatar, dateUpdated, dateUpdated, id], (err, result) => {
-        if (err) {
-            return res.status(500).json({ error: 'Database error' });
-        }
-        res.json({ message: 'User updated successfully' });
+    db.query(query, [name, password, avatar, id], (err, result) => {
+      if (err) return res.status(500).json({ error: 'Database error' });
+      res.json({ message: 'User updated successfully', user: { id, name, password, avatar } });
     });
 });
 

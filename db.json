@@ -487,6 +487,26 @@
         "id": "16",
         "category": "Fresh"
       }
+    ],
+    "bills": [
+      {
+        "id": 1,
+        "customer": "Nguyễn Văn A",
+        "date": "2024-11-01",
+        "total": 500000
+      },
+      {
+        "id": 2,
+        "customer": "Trần Thị B",
+        "date": "2024-11-05",
+        "total": 750000
+      },
+      {
+        "id": 3,
+        "customer": "Lê Minh C",
+        "date": "2024-11-10",
+        "total": 600000
+      }
     ]
   }
   

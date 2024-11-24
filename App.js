@@ -6,6 +6,8 @@ import SignUpScreen from './screens/SignUpScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import ForgetPassScreen from './screens/ForgetPassScreen';
 import Management from './screens/Management';
+import BillScreen from './screens/BillScreen';
+import ProductScreen from './screens/ProductScreen';
 import HomeScreen from './screens/HomeScreen';
 import ElectronicsScreen from './screens/ElectronicsScreen';
 import FreshScreen from './screens/FreshScreen';
@@ -60,6 +62,16 @@ export default function App() {
         <Stack.Screen 
           name="Management" 
           component={Management} 
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen 
+          name="BillScreen"
+          component={BillScreen} 
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen 
+          name="ProductScreen"
+          component={ProductScreen} 
           options={{ headerShown: false }}
         />
         <Stack.Screen 

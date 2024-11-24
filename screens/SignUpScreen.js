@@ -22,6 +22,10 @@ export default function SignUpScreen() {
     const [isModalVisible, setModalVisible] = useState(false);
     const [imageUri, setImageUri] = useState(null);
     const [imageFile, setImageFile] = useState(null);
+    
+    const validateSpecialChars = (text) => /^[a-zA-Z0-9_]+$/.test(text); // Chỉ cho phép chữ, số và _
+    const validateEmailFormat = (text) => /^[a-zA-Z0-9._%+-]+@gmail\.com$/.test(text);
+    const validateNameFormat = (text) => /^[a-zA-ZÀ-ỹ\s]+$/.test(text);
 
     const togglePasswordVisibility = () => {
         setIsPasswordVisible(!isPasswordVisible);
@@ -60,8 +64,28 @@ export default function SignUpScreen() {
     };
 
   const handleRegister = async () => {
+        setErrorMessage('');
+
         if (!username || !password || !name || !email || !imageUri) {
             setErrorMessage("Vui lòng nhập đầy đủ thông tin.");
+            setModalVisible(true);
+            return;
+        }
+
+        if (!validateSpecialChars(username)) {
+            setErrorMessage("Username không được chứa ký tự đặc biệt.");
+            setModalVisible(true);
+            return;
+        }
+
+        if (!validateNameFormat(name)) {
+            setErrorMessage("Name không được chứa ký tự đặc biệt.");
+            setModalVisible(true);
+            return;
+        }
+
+        if (!validateEmailFormat(email)) {
+            setErrorMessage("Email sai định dạng.");
             setModalVisible(true);
             return;
         }
@@ -89,14 +113,10 @@ export default function SignUpScreen() {
                 setModalVisible(true);
             }
         } catch (error) {
-            if (error.response) {
-                if (error.response.status === 409) {
-                    setErrorMessage('Username đã tồn tại');
-                } else {
-                    setErrorMessage(error.response.data.error || 'Registration failed');
-                }
+            if (error.response && error.response.status === 409) {
+              setErrorMessage('Username hoặc email đã tồn tại.');
             } else {
-                setErrorMessage('Network error');
+              setErrorMessage('Đăng ký thất bại, vui lòng thử lại.');
             }
             setModalVisible(true);
         }

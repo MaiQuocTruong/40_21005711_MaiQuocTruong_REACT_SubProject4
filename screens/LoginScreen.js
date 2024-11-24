@@ -48,6 +48,7 @@ export default function LoginScreen() {
         if (response.status === 200) {
             const user = response.data.user;
             // Lưu avatar vào AsyncStorage
+            await AsyncStorage.setItem('user', JSON.stringify(user));
             await AsyncStorage.setItem('userAvatar', JSON.stringify(user.avatar));
             await AsyncStorage.setItem('userID', JSON.stringify(user.id));
             // Redirect based on user role

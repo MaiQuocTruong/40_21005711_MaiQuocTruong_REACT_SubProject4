@@ -1,22 +1,77 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Modal, StyleSheet, Image, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, Modal, StyleSheet, Image, TextInput, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-
+import * as ImagePicker from "expo-image-picker";
 const EditModal = ({ isVisible, onClose, member, onSave }) => {
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
+  const [imageUri, setImageUri] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
 
   useEffect(() => {
     if (member) {
       setName(member.name);  
       setPassword(member.password);  
+      setImageUri(`http://localhost:3000/uploads/${member.avatar}`);
     }
   }, [member]);
 
-  const handleSave = () => {
-    const updatedMember = { ...member, name, password }; 
-    onSave(updatedMember);  
+  const handleImagePicker = async () => {
+    if (Platform.OS === 'web') {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'image/*';
+      input.onchange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+          setImageUri(URL.createObjectURL(file));
+          setImageFile(file);
+        }
+      };
+      input.click();
+    } else {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 1,
+      });
+
+      if (!result.canceled) {
+        setImageUri(result.assets[0].uri);
+        setImageFile({
+          uri: result.assets[0].uri,
+          type: 'image/jpeg',
+          name: 'avatar.jpg',
+        });
+      }
+    }
   };
+
+  const handleSave = () => {
+    const formData = new FormData();
+    formData.append('id', member.id);
+    formData.append('name', name);
+    formData.append('password', password);
+    if (imageFile) {
+      formData.append('avatar', imageFile);
+    }
+  
+    fetch('http://localhost:3000/update-user', {
+      method: 'PUT',
+      body: formData,
+    })
+      .then(response => response.json())
+      .then(data => {
+        onSave({
+          ...member,
+          name: data.user.name,
+          password: data.user.password,
+          avatar: data.user.avatar,
+        }); // Gọi hàm onSave để cập nhật danh sách
+      })
+      .catch(error => console.error('Error updating member:', error));
+  };  
 
   if (!isVisible) return null;
 
@@ -32,9 +87,9 @@ const EditModal = ({ isVisible, onClose, member, onSave }) => {
           <Text style={styles.title}>Edit</Text>
 
           {/* Avatar Circle */}
-          <View style={styles.avatarContainer}>
-            <Image source={{ uri: `http://localhost:3000/uploads/${member.avatar}` }} style={styles.avatar} />
-          </View>
+          <TouchableOpacity style={styles.avatarContainer} onPress={handleImagePicker}>
+            <Image source={{ uri: imageUri }} style={styles.avatar} />
+          </TouchableOpacity>
 
           {/* Member Information Display */}
           <View style={styles.infoContainer}>

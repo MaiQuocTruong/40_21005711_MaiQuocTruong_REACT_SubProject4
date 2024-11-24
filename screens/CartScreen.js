@@ -23,6 +23,7 @@ const CartScreen = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [itemToRemove, setItemToRemove] = useState(null);
   const [emptyCartModalVisible, setEmptyCartModalVisible] = useState(false);
+  const [errorModalVisible, setErrorModalVisible] = useState(false);
   const navigation = useNavigation();
   const [address, setAddress] = useState('');
   const [phone, setPhone] = useState('');
@@ -55,14 +56,14 @@ const CartScreen = () => {
 
   const showErrorModal = (message) => {
     setErrorMessage(message);
-    setModalVisible(true);
+    setErrorModalVisible(true);
   };
 
   const handleNextPress = () => {
     if (cartItems.length === 0) {
-        alert('Cart is empty', 'Please add some items to your cart before proceeding.');
+        showErrorModal('Không có sản phẩm nào trong giỏ hàng');
     } else if (!address || !phone) {
-        alert('Missing Information', 'Please fill in both Address and Phone.');
+        showErrorModal('Vui lòng nhập thông tin đầy đủ');
     } else {
         navigation.navigate('Payment', { 
             total, 
@@ -122,12 +123,12 @@ const CartScreen = () => {
             <TextInput style={styles.textInput} value={phone} onChangeText={setPhone} placeholder="Enter your phone number"/>
           </View>
 
-          <View style={styles.voucherSection}>
+          {/* <View style={styles.voucherSection}>
             <TextInput style={styles.voucherInput} placeholder="Enter voucher code"/>
             <TouchableOpacity style={styles.applyButton}>
               <Text style={styles.applyButtonText}>Apply</Text>
             </TouchableOpacity>
-          </View>
+          </View> */}
 
           <View style={styles.totalSection}>
             <Text style={styles.totalText}>TOTAL</Text>
@@ -141,6 +142,23 @@ const CartScreen = () => {
           </TouchableOpacity>
 
         </ScrollView>
+
+        {/* Error Modal */}
+        <Modal
+          transparent={true}
+          animationType="slide"
+          visible={errorModalVisible}
+          onRequestClose={() => setErrorModalVisible(false)}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalText}>{errorMessage}</Text>
+              <TouchableOpacity style={styles.confirmButton} onPress={() => setErrorModalVisible(false)}>
+                <Text style={styles.buttonText}>OK</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
 
         <Modal
           transparent={true}

@@ -13,6 +13,10 @@ export default function AddUserModal({ isVisible, onClose, onAddUser }) {
     const [imageFile, setImageFile] = useState(null);
     const [errorMessage, setErrorMessage] = useState("");
 
+    const validateSpecialChars = (text) => /^[a-zA-Z0-9_]+$/.test(text); // Chỉ cho phép chữ, số và _
+    const validateEmailFormat = (text) => /^[a-zA-Z0-9._%+-]+@gmail\.com$/.test(text);
+    const validateNameFormat = (text) => /^[a-zA-ZÀ-ỹ\s]+$/.test(text);
+
     const handleImagePicker = async () => {
         if (Platform.OS === 'web') {
             const input = document.createElement('input');
@@ -46,8 +50,25 @@ export default function AddUserModal({ isVisible, onClose, onAddUser }) {
       };
 
     const handleAddUser = async () => {
+        setErrorMessage('');
+
         if (!username || !password || !name || !email || !imageUri) {
             setErrorMessage("Please fill in all fields.");
+            return;
+        }
+
+        if (!validateSpecialChars(username)) {
+            setErrorMessage("Username không được chứa ký tự đặc biệt.");
+            return;
+        }
+
+        if (!validateNameFormat(name)) {
+            setErrorMessage("Name không được chứa ký tự đặc biệt.");
+            return;
+        }
+
+        if (!validateEmailFormat(email)) {
+            setErrorMessage("Email sai định dạng.");
             return;
         }
 

@@ -7,6 +7,7 @@ import { MaterialIcons, Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CartContext } from '../contexts/CartContext';
+import { AntDesign } from '@expo/vector-icons';
 
 export default function HomeScreen({ navigation }) {
   const { getCartItemCount } = useContext(CartContext);
@@ -58,6 +59,16 @@ export default function HomeScreen({ navigation }) {
     fetchData();
   }, []);
 
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.removeItem('userAvatar'); // Xóa avatar lưu trữ
+      await AsyncStorage.removeItem('userToken'); // Nếu có lưu token, xóa luôn
+      navigation.replace('LoginScreen'); // Quay về LoginScreen
+    } catch (error) {
+      console.error('Lỗi khi đăng xuất:', error);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
@@ -72,6 +83,9 @@ export default function HomeScreen({ navigation }) {
             </TouchableOpacity>
 
             <Text style={styles.headerTitle}>All deals</Text>
+
+            <Image source={userAvatar} style={styles.profileImage} />
+            
             <TouchableOpacity 
               style={styles.cartButton} 
               onPress={() => navigation.navigate('Cart')}
@@ -84,7 +98,10 @@ export default function HomeScreen({ navigation }) {
               )}
             </TouchableOpacity>
 
-            <Image source={userAvatar} style={styles.profileImage} />
+            {/* Logout Icon */}
+            <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+              <AntDesign name="logout" size={24} color="#000" />
+            </TouchableOpacity>
           </View>
 
           <View style={styles.searchContainer}>
@@ -242,6 +259,10 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
+  },
+  logoutButton: {
+    marginLeft: 10,
+    padding: 10,
   },
   searchContainer: {
     flexDirection: 'row',

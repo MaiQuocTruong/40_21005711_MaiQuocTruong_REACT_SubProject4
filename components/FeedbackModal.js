@@ -24,6 +24,8 @@ const FeedbackModal = ({ isVisible, onClose }) => {
     const [imageFile, setImageFile] = useState(null);
     const [errorMessage, setErrorMessage] = useState("");
     const [userID, setUserID] = useState(null);
+    const [notificationVisible, setNotificationVisible] = useState(false);
+    const [notificationMessage, setNotificationMessage] = useState("");
 
     // Lấy userID từ AsyncStorage nếu không truyền từ HomeScreen
     useEffect(() => {
@@ -54,6 +56,21 @@ const FeedbackModal = ({ isVisible, onClose }) => {
     const handleMoodSelect = (mood) => {
         setSelectedMood(mood);
     };
+
+    const NotificationModal = ({ isVisible, message, onClose }) => {
+        return (
+            <Modal visible={isVisible} transparent={true} animationType="fade">
+                <View style={styles.notificationOverlay}>
+                    <View style={styles.notificationContent}>
+                        <Text style={styles.notificationMessage}>{message}</Text>
+                        <TouchableOpacity style={styles.notificationCloseButton} onPress={onClose}>
+                            <Text style={styles.notificationCloseText}>Close</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
+        );
+    };    
 
     const handleImagePicker = async () => {
         if (Platform.OS === 'web') {
@@ -93,7 +110,8 @@ const FeedbackModal = ({ isVisible, onClose }) => {
 
     const handleSubmit = async () => {
         if (!feedback || !imageUri) {
-            setErrorMessage("Vui lòng nhập đầy đủ thông tin.");
+            setNotificationMessage("Vui lòng nhập đầy đủ thông tin.");
+            setNotificationVisible(true);
             return;
         }
 
@@ -111,19 +129,23 @@ const FeedbackModal = ({ isVisible, onClose }) => {
                 },
             });
 
-            if (response.status === 200) {
-                alert('Phản hồi đã được gửi thành công!');
+            if (response.status === 201 && response.data.message) {
+                setNotificationMessage("Phản hồi đã được gửi thành công!");
+                setNotificationVisible(true);
                 onClose();
             } else {
-                alert('Gửi phản hồi thất bại. Vui lòng thử lại.');
+                setNotificationMessage("Gửi phản hồi thất bại. Vui lòng thử lại.");
+                setNotificationVisible(true);
             }
         } catch (error) {
             console.error('Lỗi khi gửi phản hồi:', error);
-            alert('Đã xảy ra lỗi. Vui lòng thử lại sau.');
+            setNotificationMessage("Đã xảy ra lỗi. Vui lòng thử lại sau.");
+            setNotificationVisible(true);
         }
     };      
 
     return (
+        <>
         <Modal visible={isVisible} transparent={true} animationType="slide">
             <View style={styles.modalOverlay}>
                 <View style={styles.modalContent}>
@@ -230,6 +252,14 @@ const FeedbackModal = ({ isVisible, onClose }) => {
                 </View>
             </View>
         </Modal>
+
+        {/* Sử dụng NotificationModal */}
+        <NotificationModal
+                isVisible={notificationVisible}
+                message={notificationMessage}
+                onClose={() => setNotificationVisible(false)}
+            />
+        </>
     );
 };
 
@@ -377,6 +407,37 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontWeight: '600',
     },
+    notificationOverlay: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0,0,0,0.5)',
+    },
+    notificationContent: {
+        backgroundColor: '#fff',
+        padding: 20,
+        borderRadius: 10,
+        alignItems: 'center',
+        width: '80%',
+    },
+    notificationMessage: {
+        fontSize: 16,
+        color: '#333',
+        textAlign: 'center',
+        marginBottom: 10,
+    },
+    notificationCloseButton: {
+        marginTop: 10,
+        backgroundColor: '#00bdd6',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 8,
+    },
+    notificationCloseText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: '600',
+    },    
 });
 
 export default FeedbackModal;

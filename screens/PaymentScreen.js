@@ -15,6 +15,7 @@ import axios from 'axios';
 import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import AddPaymentModal from '../components/AddPaymentModal';
 
 const PaymentScreen = () => {
   const [paymentMethods, setPaymentMethods] = useState([]);
@@ -25,15 +26,34 @@ const PaymentScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const total = route.params?.total;
+  const [isAddPaymentModalVisible, setAddPaymentModalVisible] = useState(false);
+  const [brandLogos, setBrandLogos] = useState([]);
+
+  // Hàm thêm phương thức thanh toán mới
+  const handleAddPayment = (newPaymentMethod) => {
+    setPaymentMethods((prevMethods) => [...prevMethods, newPaymentMethod]);
+  };
 
   useEffect(() => {
-    axios.get('http://localhost:3000/api/ecommerce/paymentmethods')
-      .then(response => {
-        setPaymentMethods(response.data);
-        const selected = response.data.find(method => method.selected);
-        setSelectedMethod(selected?.id || null);
-      })
-      .catch(error => console.error(error));
+    const fetchPaymentMethods = async () => {
+        try {
+            const accountID = await AsyncStorage.getItem('userID');
+            const response = await axios.get('http://localhost:3000/api/ecommerce/paymentmethods', {
+                params: { accountID: JSON.parse(accountID) },
+            });
+            setPaymentMethods(response.data);
+            // Lấy danh sách thương hiệu thanh toán
+            const brandResponse = await axios.get('http://localhost:3000/api/ecommerce/brandpayment');
+            const brandData = brandResponse.data;
+            setBrandLogos(brandData); // Lưu thông tin logo vào state
+
+            const selected = response.data.find(method => method.selected);
+            setSelectedMethod(selected?.id || null);
+        } catch (error) {
+            console.error('Lỗi khi tải phương thức thanh toán:', error);
+        }
+    };
+    fetchPaymentMethods();
   }, []);
 
   const handleSelectMethod = (id) => {
@@ -60,24 +80,25 @@ const PaymentScreen = () => {
         paymentID: selectedMethod,
     };
 
-    setTimeout(async () => {
-        try {
-            const response = await axios.post('http://localhost:3000/api/ecommerce/bill', payload);
-            if (response.status === 200) {
-                navigation.navigate('PaymentSuccess', {
-                    selectedMethod: paymentMethods.find((method) => method.id === selectedMethod),
-                    total: route.params.total,
-                });
-            } else {
-                alert('Error', response.data.message || 'Failed to process payment');
-            }
-        } catch (error) {
-            console.error('Error saving bill:', error);
-            alert('Error', 'An error occurred while processing your payment.');
-        } finally {
-            setLoading(false);
+    try {
+        const response = await axios.post('http://localhost:3000/api/ecommerce/bill', payload);
+        if (response.status === 200) {
+            const selectedPaymentMethod = paymentMethods.find((method) => method.id === selectedMethod);
+            const brandLogo = brandLogos.find(logo => logo.brand === selectedPaymentMethod.brand);
+            navigation.navigate('PaymentSuccess', {
+                selectedMethod: selectedPaymentMethod,
+                brandLogo: brandLogo ? brandLogo.logo : null,
+                total: route.params.total,
+            });
+        } else {
+            alert('Error', response.data.message || 'Failed to process payment');
         }
-    }, 1000);
+    } catch (error) {
+        console.error('Error saving bill:', error);
+        alert('Error', 'An error occurred while processing your payment.');
+    } finally {
+        setLoading(false);
+    }
   };
 
   const cancelPayment = () => {
@@ -90,6 +111,7 @@ const PaymentScreen = () => {
 
   const renderPaymentMethod = ({ item }) => {
     const isSelected = selectedMethod === item.id;
+    const brandLogo = brandLogos.find(logo => logo.brand === item.brand);
 
     return (
       <TouchableOpacity
@@ -98,18 +120,10 @@ const PaymentScreen = () => {
       >
         <Image
           style={styles.logo}
-          source={
-                item.brand === 'visa'
-              ? require('../assets/Data/visa.png')
-              : item.brand === 'mastercard'
-              ? require('../assets/Data/mastercard.png')
-              : item.brand === 'paypal'
-              ? require('../assets/Data/paypal.png')
-              : require('../assets/Data/momo.png')
-          }
+          source={brandLogo ? { uri: brandLogo.logo } : require('../assets/logo/agribank_logo.png')}
         />
         <Text style={styles.cardInfo}>
-          {item.type === 'PayPal' ? item.email : `****** ${item.number}`}
+          {item.type === 'PayPal' ? item.email : `${item.number}`}
         </Text>
         <View style={styles.radioButtonContainer}>
           <View style={[styles.radioButton, isSelected ? styles.selectedRadioButton : styles.defaultRadioButton]}>
@@ -156,11 +170,18 @@ const PaymentScreen = () => {
           </TouchableOpacity>
 
           {/* Button add payment method*/}
-          <TouchableOpacity style={styles.addPayButton}>
+          <TouchableOpacity style={styles.addPayButton} onPress={() => setAddPaymentModalVisible(true)}>
             <MaterialCommunityIcons  name="credit-card-plus-outline" size={24} color="#00bdd6" style={styles.icon}/>
             <Text style={styles.addPayButtonText}>Add payment method</Text>
           </TouchableOpacity>
         </View>
+
+        {/* Hiển thị modal */}
+        <AddPaymentModal
+          isVisible={isAddPaymentModalVisible}
+          onClose={() => setAddPaymentModalVisible(false)}
+          onSave={handleAddPayment}
+        />;
 
         {/* Modal xác nhận thanh toán */}
         <Modal

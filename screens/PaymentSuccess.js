@@ -18,6 +18,7 @@ const PaymentSuccess = () => {
     const route = useRoute();
     const selectedMethod = route.params?.selectedMethod || {};
     const total = route.params?.total || 0;
+    const brandLogo = route.params?.brandLogo || null;
     const navigation = useNavigation();
     const { clearCart } = useContext(CartContext); // Sử dụng clearCart từ CartContext
 
@@ -42,29 +43,18 @@ const PaymentSuccess = () => {
     };
 
     const renderPaymentMethod = () => {
-        if (selectedMethod.type === 'PayPal') {
-            return (
-                <>
-                    <Image source={require('../assets/Data/paypal.png')} style={styles.cardImage} />
-                    <Text style={styles.cardText}>{selectedMethod.email}</Text>
-                </>
-            );
-        } else if (selectedMethod.brand === 'momo') {
-            return (
-                <>
-                    <Image source={require('../assets/Data/momo.png')} style={styles.cardImage} />
-                    <Text style={styles.cardText}>****** {selectedMethod.number}</Text>
-                </>
-            );
-        } else {
-            const logo = selectedMethod.brand === 'visa' ? require('../assets/Data/visa.png') : require('../assets/Data/mastercard.png');
-            return (
-                <>
-                    <Image source={logo} style={styles.cardImage} />
-                    <Text style={styles.cardText}>****** {selectedMethod.number}</Text>
-                </>
-            );
-        }
+        return (
+          <>
+            {brandLogo ? (
+              <Image source={{ uri: brandLogo }} style={styles.cardImage} />
+            ) : (
+              <Text>No logo available</Text> // Fallback when no logo is found
+            )}
+            <Text style={styles.cardText}>
+              {selectedMethod.type === 'PayPal' ? selectedMethod.email : `****** ${selectedMethod.number}`}
+            </Text>
+          </>
+        );
     };
 
     return (

@@ -5,13 +5,15 @@ import ActionModal from '../components/ActionModal';
 import ViewMemberModal from '../components/ViewMemberModal';
 import AddUserModal from '../components/AddUserModal';
 import EditModal from '../components/EditModal';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect  } from '@react-navigation/native';
+import AdminFooter from '../components/AdminFooter';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
 export default function Management({ route }) {
   const navigation = useNavigation();
-  const { admin } = route.params;
+  const [admin, setAdmin] = useState({});
   const [actionModalVisible, setActionModalVisible] = useState(false);
   const [isAddUserModalVisible, setAddUserModalVisible] = useState(false);
   const [viewModalVisible, setViewModalVisible] = useState(false);
@@ -19,18 +21,53 @@ export default function Management({ route }) {
   const [selectedMember, setSelectedMember] = useState(null);
   const [modalPosition, setModalPosition] = useState(null);
   const [teamMembers, setTeamMembers] = useState([]);
-
+  
+  const fetchAdminData = async () => {
+    try {
+      const adminData = await AsyncStorage.getItem('user');
+      if (adminData) {
+        setAdmin(JSON.parse(adminData));
+      }
+    } catch (error) {
+      console.error("Lỗi khi lấy thông tin admin:", error);
+    }
+  };
+  
   useEffect(() => {
-    fetchTeamMembers();
+    fetchAdminData();
+    loadTeamMembersFromStorage();
   }, []);
 
-  const fetchTeamMembers = () => {
-    fetch('http://localhost:3000/accounts')
-      .then(response => response.json())
-      .then(data => setTeamMembers(data))
-      .catch(error => console.error('Error fetching accounts:', error));
+  useFocusEffect(
+    React.useCallback(() => {
+        fetchTeamMembers(); // Tải lại danh sách mỗi khi màn hình được hiển thị
+    }, [])
+  );
+
+  const fetchTeamMembers = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/accounts');
+      const data = await response.json();
+      setTeamMembers(data);
+      await AsyncStorage.setItem('teamMembers', JSON.stringify(data));
+    } catch (error) {
+      console.error('Error fetching accounts:', error);
+    }
   };
 
+  const loadTeamMembersFromStorage = async () => {
+    try {
+      const storedData = await AsyncStorage.getItem('teamMembers');
+      if (storedData) {
+        setTeamMembers(JSON.parse(storedData));  // Lấy dữ liệu từ AsyncStorage và hiển thị
+      } else {
+        fetchTeamMembers(); // Nếu không có dữ liệu trong AsyncStorage, tải lại từ API
+      }
+    } catch (error) {
+      console.error('Error loading accounts from AsyncStorage:', error);
+    }
+  };
+  
   const handleLogout = () => {
     navigation.navigate('LoginScreen');
   };
@@ -107,21 +144,20 @@ export default function Management({ route }) {
   };
 
   const handleSave = (updatedMember) => {
-    fetch('http://localhost:3000/update-user', {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(updatedMember),  // Send the updated member data
-    })
-      .then(response => response.json())
-      .then(data => {
-        console.log('Member updated successfully:', data);
-        fetchTeamMembers();  // Refresh the team members list
-        setEditModalVisible(false);  // Close the modal
-      })
-      .catch(error => console.error('Error updating member:', error));
-  }; 
+    setTeamMembers((prevMembers) =>
+      prevMembers.map((member) =>
+        member.id === updatedMember.id ? updatedMember : member
+      )
+    );
+    setEditModalVisible(false);
+  };  
+
+  const getTimeOfDayGreeting = () => {
+    const hours = new Date().getHours();
+    if (hours < 12) return "Good morning";
+    if (hours < 18) return "Good afternoon";
+    return "Good evening";
+  };
 
   const renderItem = ({ item }) => (
     <View style={styles.memberRow}>
@@ -160,7 +196,7 @@ export default function Management({ route }) {
             style={styles.avatarAdmin} 
           />
           <View style={styles.textContainer}>
-            <Text style={styles.welcomeText}>Welcome!</Text>
+            <Text style={styles.welcomeText}>{getTimeOfDayGreeting()}!</Text>
             <Text style={styles.adminName}>{admin.name}</Text>
           </View>
         </View>
@@ -225,6 +261,7 @@ export default function Management({ route }) {
         />
       )}
     </ScrollView>
+    <AdminFooter />
     </View>
     </SafeAreaView>
   );

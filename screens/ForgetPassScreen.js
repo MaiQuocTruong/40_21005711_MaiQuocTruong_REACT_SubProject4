@@ -39,7 +39,7 @@ export default function ForgetPassScreen() {
       setModalVisible(true);
     } else {
       try {
-        const response = await axios.put('http://localhost:3001/reset-password', {
+        const response = await axios.put('http://localhost:3000/reset-password', {
           username,
           password,
         });

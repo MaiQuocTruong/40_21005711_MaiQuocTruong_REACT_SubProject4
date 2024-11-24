@@ -31,17 +31,14 @@ CREATE TABLE IF NOT EXISTS `account` (
   `dateAdded` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `lastActive` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Dumping data for table ecommerce.account: ~7 rows (approximately)
 INSERT INTO `account` (`id`, `username`, `name`, `email`, `password`, `avatar`, `role`, `dateAdded`, `lastActive`) VALUES
 	(1, 'maiqtruong', 'Mai Quốc Trưởng', 'maiqtruong2403@gmail.com', '123', '1731274229931.jpg', 'Admin', '2024-11-11 03:22:40', '2024-11-10 08:30:00'),
 	(2, 'jane_smith123', 'Jane Smith', 'jane@example.com', '123', '1732098048333.jpg', 'User', '2024-11-11 12:48:40', '2024-11-11 12:48:40'),
 	(3, 'truongmai', 'Mai Truong', 'maitruong2403@gmail.com', '123', '1731958635060.jpg', 'User', '2024-11-19 02:37:15', '2024-11-19 02:37:15'),
-	(4, 'truong123', 'Truong Nguyen', 'truong123@gmail.com', '123', '1732032068613.jpg', 'User', '2024-11-19 23:01:09', '2024-11-19 23:01:09'),
-	(5, 'thien', 'Lê Trọng Thiện', 'thien@gmail.com', '123', '1732098176323.jpg', 'User', '2024-11-20 17:07:03', '2024-11-20 17:07:03'),
-	(6, 'hai', 'Nguyen Hai', 'hai@gmail.com', '123', '1732103817070.jpg', 'User', '2024-11-20 18:56:57', '2024-11-20 18:56:57'),
-	(7, 'thuan', 'Gia Thuận', 'thuan123@gmail.com', '123', '1732106138318.jpg', 'User', '2024-11-20 19:35:38', '2024-11-20 19:35:38');
+	(4, 'vana', 'Văn A', 'vana@gmail.com', '123456', '1732385513516.jpeg', 'User', '2024-11-24 01:11:54', '2024-11-24 01:11:54');
 
 -- Dumping structure for table ecommerce.bill
 CREATE TABLE IF NOT EXISTS `bill` (
@@ -55,25 +52,13 @@ CREATE TABLE IF NOT EXISTS `bill` (
   KEY `FK_bill_paymentmethods` (`paymentID`),
   CONSTRAINT `FK_bill_account` FOREIGN KEY (`accountID`) REFERENCES `account` (`id`) ON DELETE CASCADE,
   CONSTRAINT `FK_bill_paymentmethods` FOREIGN KEY (`paymentID`) REFERENCES `paymentmethods` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table ecommerce.bill: ~15 rows (approximately)
+-- Dumping data for table ecommerce.bill: ~0 rows (approximately)
 INSERT INTO `bill` (`billID`, `address`, `phone`, `accountID`, `paymentID`) VALUES
-	(1, '12/25 Đông Hưng Thuận 31, HCM, Q12', '0398911257', 4, 2),
-	(2, '1 Chome-1-2 Oshiage', '0398911257', 4, 9),
-	(3, '3311 W 155th St', '31123', 4, 8),
-	(4, '30 Nguyen Bảo', '0321321311', 4, 9),
-	(5, '12 Nguyen Trai', '123456789', 3, 10),
-	(6, '1 Nguyen Hung', '123123123', 2, 11),
-	(7, '12/25 Đông Hưng Thuận 31, HCM, Q12', '0398911257', 3, 12),
-	(8, '12/25 Đông Hưng Thuận 31, HCM, Q12', '0398911257', 3, 10),
-	(9, '12/25 Đông Hưng Thuận 31, HCM, Q12', '0398911257', 4, 13),
-	(10, '12/25 Đông Hưng Thuận 31, HCM, Q12', '0398911257', 4, 14),
-	(11, '12/21 Đông Hưng Thuận 3, HCM, Q11', '0341911257', 4, 1),
-	(12, '12 Nguyen Hung', '0941911337', 4, 2),
-	(13, '100 Nguyen Van Bao', '123456789', 5, 3),
-	(14, '10 Tan Binh', '123412341', 6, 4),
-	(15, '30 Nguyen Ha', '032311321311', 7, 5);
+	(1, '12/25 Đông Hưng Thuận 3, HCM, Q12', '0398911257', 4, 2),
+	(2, '12 Nguyen Trai', '123456789', 3, 4),
+	(3, '30 Nguyen Van Bảo', '0123911257', 3, 5);
 
 -- Dumping structure for table ecommerce.brandpayment
 CREATE TABLE IF NOT EXISTS `brandpayment` (
@@ -83,7 +68,7 @@ CREATE TABLE IF NOT EXISTS `brandpayment` (
   PRIMARY KEY (`brandID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table ecommerce.brandpayment: ~17 rows (approximately)
+-- Dumping data for table ecommerce.brandpayment: ~15 rows (approximately)
 INSERT INTO `brandpayment` (`brandID`, `brand`, `logo`) VALUES
 	(1, 'Vietcombank', 'https://i.imgur.com/4Go2yFG.png'),
 	(2, 'Techcombank', 'https://i.imgur.com/YIHZaUS.png'),
@@ -155,20 +140,13 @@ CREATE TABLE IF NOT EXISTS `feedback` (
   PRIMARY KEY (`idfb`),
   KEY `FK_feedback_account` (`accountID`),
   CONSTRAINT `FK_feedback_account` FOREIGN KEY (`accountID`) REFERENCES `account` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table ecommerce.feedback: ~10 rows (approximately)
+-- Dumping data for table ecommerce.feedback: ~0 rows (approximately)
 INSERT INTO `feedback` (`idfb`, `comment`, `days`, `image`, `accountID`) VALUES
-	(1, 'Goodddddddddd', '2024-11-18', '1731961057217.png', 3),
-	(2, 'Ngon lam', '2024-11-18', '1731961146704.png', 2),
-	(3, 'Tuyett', '2024-11-19', '1732021682449.png', 3),
-	(4, 'Được lắm', '2024-11-19', '1732022272422.png', 3),
-	(5, '10đ', '2024-11-19', '1732022448053.png', 2),
-	(6, 'khá là ngonnn :33', '2024-11-19', '1732030054344.png', 2),
-	(7, 'xuat saccc', '2024-11-19', '1732032181917.png', 4),
-	(8, 'Qúa ngonnn', '2024-11-20', '1732098312018.png', 5),
-	(9, 'Khá là ok', '2024-11-20', '1732103941008.png', 6),
-	(10, 'Qua troi da roi', '2024-11-20', '1732106220844.png', 7);
+	(1, 'Cũng ok ', '2024-11-23', '1732387396847.png', 4),
+	(2, 'Đượccc', '2024-11-23', '1732387505981.png', 3),
+	(3, 'Tuytttt', '2024-11-23', '1732388131993.png', 3);
 
 -- Dumping structure for table ecommerce.paymentmethods
 CREATE TABLE IF NOT EXISTS `paymentmethods` (
@@ -186,13 +164,13 @@ CREATE TABLE IF NOT EXISTS `paymentmethods` (
   CONSTRAINT `FK_paymentmethods_brand` FOREIGN KEY (`brandID`) REFERENCES `brandpayment` (`brandID`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table ecommerce.paymentmethods: ~5 rows (approximately)
+-- Dumping data for table ecommerce.paymentmethods: ~0 rows (approximately)
 INSERT INTO `paymentmethods` (`id`, `type`, `number`, `email`, `brand`, `accountID`, `brandID`) VALUES
-	(1, 'Vietcombank', '12345', NULL, 'Vietcombank', 4, 1),
-	(2, 'PayPal', NULL, 'thuan123@gmail.com', 'PayPal', 4, 8),
-	(3, 'VPBank', '12345', NULL, 'VPBank', 5, 5),
-	(4, 'MBBank', '1234', NULL, 'MBBank', 6, 10),
-	(5, 'Techcombank', '123541', NULL, 'Techcombank', 7, 2);
+	(1, 'Vietcombank', '10398131', NULL, 'Vietcombank', 4, 1),
+	(2, 'BIDV', '18012316', NULL, 'BIDV', 4, 3),
+	(3, 'PayPal', NULL, 'vana@gmail.com', 'PayPal', 4, 8),
+	(4, 'MoMo', '0398911257', NULL, 'MoMo', 3, 9),
+	(5, 'VPBank', '151212316', NULL, 'VPBank', 3, 5);
 
 -- Dumping structure for table ecommerce.productsofelectronics
 CREATE TABLE IF NOT EXISTS `productsofelectronics` (
@@ -207,7 +185,7 @@ CREATE TABLE IF NOT EXISTS `productsofelectronics` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table ecommerce.productsofelectronics: ~30 rows (approximately)
+-- Dumping data for table ecommerce.productsofelectronics: ~31 rows (approximately)
 INSERT INTO `productsofelectronics` (`id`, `name`, `price`, `rating`, `image`, `description`, `status`, `category`) VALUES
 	(1, 'Smartphone', '$899', 4, 'https://i.imgur.com/dSs05cL.png', 'Consequat ex eu', 'Best Sales', 'Electronics'),
 	(2, 'Smartphone', '$500', 4, 'https://i.imgur.com/jX3QmQD.png', 'Consequat ex eu', 'Best Sales', 'Electronics'),
@@ -238,7 +216,8 @@ INSERT INTO `productsofelectronics` (`id`, `name`, `price`, `rating`, `image`, `
 	(27, 'MacBook', '$603', 4, 'https://i.imgur.com/WJRePm8.png', 'Consequat ex eu', 'Popular', 'Electronics'),
 	(28, 'MacBook', '$602', 4, 'https://i.imgur.com/WJRePm8.png', 'Consequat ex eu', 'Popular', 'Electronics'),
 	(29, 'MacBook', '$601', 4, 'https://i.imgur.com/WJRePm8.png', 'Consequat ex eu', 'Popular', 'Electronics'),
-	(30, 'MacBook', '$600', 4, 'https://i.imgur.com/WJRePm8.png', 'Consequat ex eu', 'Popular', 'Electronics');
+	(30, 'MacBook', '$600', 4, 'https://i.imgur.com/WJRePm8.png', 'Consequat ex eu', 'Popular', 'Electronics'),
+	(31, 'MacBook', '$100', 4, 'http://localhost:3000/uploads/1732371707209.jpg', 'aaaaaa', 'Best Matched', 'Electronics');
 
 -- Dumping structure for table ecommerce.productsoffresh
 CREATE TABLE IF NOT EXISTS `productsoffresh` (
@@ -252,7 +231,7 @@ CREATE TABLE IF NOT EXISTS `productsoffresh` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table ecommerce.productsoffresh: ~16 rows (approximately)
+-- Dumping data for table ecommerce.productsoffresh: ~0 rows (approximately)
 INSERT INTO `productsoffresh` (`id`, `name`, `price`, `rating`, `image`, `description`, `category`) VALUES
 	(1, 'Pear', '$12', 4, 'https://i.imgur.com/lEoPSTO.png', 'Consequat ex eu', 'Fresh'),
 	(2, 'Avocado', '$11', 4, 'https://i.imgur.com/PJqgkB0.png', 'Consequat ex eu', 'Fresh'),
